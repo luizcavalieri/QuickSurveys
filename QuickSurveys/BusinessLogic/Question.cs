@@ -77,6 +77,12 @@ namespace QuickSurveys
 
         # region method
 
+        public int showQuestion()
+        {
+            
+            return 1;
+        }
+
 
         #endregion
 

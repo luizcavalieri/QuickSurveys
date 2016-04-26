@@ -3,3 +3,7 @@ C:\Users\luizc\Documents\Visual Studio 2010\Projects\QuickSurveys\QuickSurveys\b
 C:\Users\luizc\Documents\Visual Studio 2010\Projects\QuickSurveys\QuickSurveys\obj\Debug\QuickSurveys.csprojResolveAssemblyReference.cache
 C:\Users\luizc\Documents\Visual Studio 2010\Projects\QuickSurveys\QuickSurveys\obj\Debug\QuickSurveys.dll
 C:\Users\luizc\Documents\Visual Studio 2010\Projects\QuickSurveys\QuickSurveys\obj\Debug\QuickSurveys.pdb
+C:\Users\luizc\Documents\QuickSurveys\QuickSurveys\bin\QuickSurveys.dll
+C:\Users\luizc\Documents\QuickSurveys\QuickSurveys\bin\QuickSurveys.pdb
+C:\Users\luizc\Documents\QuickSurveys\QuickSurveys\obj\Debug\QuickSurveys.dll
+C:\Users\luizc\Documents\QuickSurveys\QuickSurveys\obj\Debug\QuickSurveys.pdb
