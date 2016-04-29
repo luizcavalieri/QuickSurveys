@@ -1,0 +1,37 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="MasterPage.master.cs" Inherits="QuickSurveys.MasterPage" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title></title>
+    <link href="Content/bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="Content/bootstrap-theme.css" rel="stylesheet" type="text/css" />
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+    <style type="text/css">
+        .icon
+        {}
+    </style>
+</head>
+<body style="margin-bottom: 243px">
+    <form id="form1" runat="server">
+    <div>
+        <asp:Panel ID="Panel1" runat="server" BackColor="#0066CC" Height="81px">
+               <p> 
+                    &nbsp;
+                    <asp:Label ID="Label1" runat="server" Text="QuickSurveys" CssClass="h1" 
+                        ForeColor="White"></asp:Label>
+                    <br /> <br />
+                    <asp:Menu ID="Menu1"  runat="server" Orientation="Horizontal" CssClass="icon" ForeColor="White" Height="23px" RenderingMode="Table" Width="626px" padding>
+                    </asp:Menu>
+                </p>
+            </asp:Panel>
+        <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+            
+        
+        </asp:ContentPlaceHolder>
+    </div>
+    </form>
+</body>
+</html>
