@@ -8,10 +8,25 @@
         
         <br /> 
         <br />
+        
+        <asp:Button ID="btnSurveys" runat="server" Text="Button" 
+                CssClass="btn btn-success btn-group-lg" OnClick="OnButtonClick"/>
+
+        <asp:GridView ID="GridView2" runat="server">
+           
+        </asp:GridView>
+
+        
         <asp:Label ID="lblQuestSurveySequence" runat="server" Text="-" CssClass="h4"></asp:Label>
         <asp:Label ID="lblQuestionDesc" runat="server" Text="-" CssClass="h4"></asp:Label>
-        <asp:Label ID="lblInputType" runat="server" Text="-" ></asp:Label>
-    
+        <asp:Label ID="lblInputType" runat="server" Text="-" ></asp:Label><br /> <br />
+        <asp:Label ID="lblGroupOPtion" runat="server" Text="Label"></asp:Label>
+        
+        <asp:CheckBoxList runat="server">
+        </asp:CheckBoxList>
+
+
+
         <asp:GridView ID="GridView1" runat="server"  CssClass="table table-hover table-striped">
         </asp:GridView>
     </div>

@@ -20,7 +20,8 @@
         <asp:Panel ID="Panel1" runat="server" BackColor="#0066CC" Height="81px">
                <p> 
                     &nbsp;
-                    <asp:Label ID="Label1" runat="server" Text="QuickSurveys" CssClass="h1" 
+                    <br / >
+                    <asp:Label ID="Label1" runat="server" Text="QuickSurveys" CssClass="text-left h1" 
                         ForeColor="White"></asp:Label>
                     <br /> <br />
                     <asp:Menu ID="Menu1"  runat="server" Orientation="Horizontal" CssClass="icon" ForeColor="White" Height="23px" RenderingMode="Table" Width="626px" padding>

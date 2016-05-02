@@ -77,10 +77,6 @@ namespace QuickSurveys
 
         # region method
 
-        public static TabBookModel Parse(bookDS.TabReservedRow row)
-        {
-
-        }
 
         #endregion
 
