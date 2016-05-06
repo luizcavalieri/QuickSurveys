@@ -66,18 +66,23 @@ namespace QuickSurveys
            // DataTable dt = new DataTable();
 
 
-            DataTable dtSurveyButtons = new DataTable();
+            DataTable dtSurvey = new DataTable();
 
-            dtSurveyButtons.Columns.Add("SurveyButton", System.Type.GetType("System.String"));
+            //dtSurveyButtons.Columns.Add("SurveyButton", System.Type.GetType("System.String"));
+
+            btnSurveys.Text = myReader["survey_description"].ToString();
 
 
-          
-            for (int index = 0; index < dtSurveyButtons.Count; index++)
+
+            while (myReader.Read())
             {
-                Button btnSurvey = new Button();
 
-                btnSurvey.Click += new EventHandler(OnButtonClick);
-                this.Controls.Add(btnSurvey);
+                btnSurveys.Text = myReader["survey_description"].ToString();
+
+                //button btnsurvey = new button();
+
+                //btnsurvey.click += new eventhandler(onbuttonclick);
+                //this.controls.add(btnsurvey);
             }
 
             
