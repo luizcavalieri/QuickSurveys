@@ -9,9 +9,7 @@
         <br /> 
         <br />
         
-        <asp:Button ID="btnSurveys" runat="server" Text="Button" 
-                CssClass="btn btn-success btn-group-lg" OnClick="OnButtonClick"/>
-
+   
         <asp:GridView ID="GridView2" runat="server">
            
         </asp:GridView>

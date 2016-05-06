@@ -9,16 +9,16 @@ namespace QuickSurveys.Config
     {
         public static string UserID
         {
-            set { HttpContext.Current.Session["UserId"] = value; }
+            set { HttpContext.Current.Session["user_id"] = value; }
             get
             {
-                if (HttpContext.Current.Session["UserId"] == null || HttpContext.Current.Session["UserId"] == "")
+                if (HttpContext.Current.Session["user_id"] == null || HttpContext.Current.Session["user_id"] == "")
                 {
                     return "SESSION_GET_FAIL";
                 }
                 else
                 {
-                    return HttpContext.Current.Session["UserId"] as string;
+                    return HttpContext.Current.Session["user_id"] as string;
                 }
             }
         }
