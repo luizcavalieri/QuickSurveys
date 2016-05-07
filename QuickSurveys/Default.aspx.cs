@@ -10,16 +10,21 @@ using System.Configuration;
 
 namespace QuickSurveys
 {
-    public partial class Default : System.Web.UI.Page
+    public partial class Default : Config.BasePage
     {
-        protected void Page_Load(object sender, EventArgs e)
-        {
-            SqlConnection myConnection;
-            SqlCommand myCommand;
-           
-            String myConnectionString = ConfigurationManager.ConnectionStrings["MyConnection" ].ConnectionString;
+        // creating object from class question
+        Question currentQuestion = new Question();
+        Survey currentSurvey = new Survey();
+        SqlConnection myConnection;
+        SqlCommand myCommand;
 
-            if (myConnectionString.Equals("prod" ))
+        public void connectString()
+        {
+            
+            
+            String myConnectionString = ConfigurationManager.ConnectionStrings["MyConnection"].ConnectionString;
+
+            if (myConnectionString.Equals("prod"))
             {
                 myConnectionString = AppConstant.ProdConnectionString;
             }
@@ -32,10 +37,17 @@ namespace QuickSurveys
                 myConnectionString = AppConstant.DevConnectionString;
             }
 
-            myConnection = new SqlConnection ();
+            myConnection = new SqlConnection();
             myConnection.ConnectionString = myConnectionString;
+        }
 
-            int yourIndex = 10;
+        protected void Page_Load(object sender, EventArgs e)
+        {
+           
+            connectString();
+           
+            int yourIndex = 1;
+            int questSequence = 2;
 
             String queryQuestionInputType = @"SELECT qt.quest_id, 
                                                      qt.quest_description, 
@@ -53,7 +65,9 @@ namespace QuickSurveys
                                              ON qt.quest_survey_id = srv.survey_id
                                              Join answer_group_option ago
                                              on qt.quest_answer_group_id = ago.answer_group_id                                                                  
-                                             where quest_id = " + yourIndex;
+                                             where quest_survey_id = " + yourIndex +@" and 
+                                                   quest_survey_sequence = " + questSequence;
+
 
             //get the sql script executing on the connection
             myCommand = new SqlCommand(queryQuestionInputType, myConnection);
@@ -64,15 +78,16 @@ namespace QuickSurveys
             //open the reader
             SqlDataReader myReader = myCommand.ExecuteReader();
 
-            // creating object from class question
-            Question currentQuestion = new Question();
-            Survey currentSurvey = new Survey();
-
             if (myReader.Read()) 
             {
-                currentQuestion.quest_description = myReader["survey_description"].ToString();
+                currentQuestion.quest_description = myReader["quest_description"].ToString();
                 currentQuestion.quest_survey_sequence = Int32.Parse(myReader["quest_survey_sequence"].ToString());
                 currentSurvey.survey_description = myReader["survey_description"].ToString();
+                currentQuestion.quest_answer_group_id = Int32.Parse(myReader["quest_answer_group_id"].ToString());
+                
+                int answerGroupId = currentQuestion.quest_answer_group_id;
+
+                FillCheckBox(answerGroupId);
 
             }
 
@@ -81,17 +96,41 @@ namespace QuickSurveys
             lblSurveyDesc.Text = currentSurvey.survey_description;
               
 
-
-
-
-
-
-            
-
-
         }
 
 
+        private void FillCheckBox(int answerGroupId)
+        {
+
+            connectString();
+
+            String queryAnswerGroupOption = @"SELECT answer_group_option_id, 
+                                                     answer_group_option_desc, 
+                                                     answer_group_id,
+                                                     answer_group_logical_answer 
+                                             FROM answer_group_option
+                                             where answer_group_id = " + answerGroupId;
+
+            //get the sql script executing on the connection
+            myCommand = new SqlCommand(queryAnswerGroupOption, myConnection);
+
+            myConnection.Open();
+
+            
+            SqlDataReader readerChbx = myCommand.ExecuteReader();
+
+            while (readerChbx.Read())
+            {
+                ListItem item = new ListItem();
+                item.Text = readerChbx["answer_group_option_desc"].ToString();
+                item.Value = readerChbx["answer_group_option_id"].ToString();
+
+                ddAnswerGroupOpt.Items.Add(item);
+            }
+
+            myConnection.Close();
+
+        }
 
         protected void GridView1_RowDataBound1(object sender, GridViewRowEventArgs e)
         {

@@ -58,13 +58,31 @@ namespace QuickSurveys {
         protected global::System.Web.UI.WebControls.Label lblInputType;
         
         /// <summary>
-        /// lblGroupOption control.
+        /// cbxAnswerGroupOpt control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblGroupOption;
+        protected global::System.Web.UI.WebControls.CheckBoxList cbxAnswerGroupOpt;
+        
+        /// <summary>
+        /// rdbAnswerGroupOpt control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RadioButtonList rdbAnswerGroupOpt;
+        
+        /// <summary>
+        /// ddAnswerGroupOpt control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddAnswerGroupOpt;
         
         /// <summary>
         /// GridView1 control.

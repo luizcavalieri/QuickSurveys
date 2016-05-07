@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Data.SqlClient;
+using System.Configuration;
+using System.Data;
 
 
 namespace QuickSurveys
@@ -12,7 +15,7 @@ namespace QuickSurveys
 
         private int _quest_id;
         private string _quest_description;
-        private int _quest_answer_group_option_id;
+        private int _quest_answer_group_id;
         private int _quest_required;
         private int _quest_input_type_id;
         private int _quest_survey_id;
@@ -35,10 +38,10 @@ namespace QuickSurveys
             get { return _quest_description; }
             set { _quest_description = value; }
         }
-        public int quest_answer_group_option_id
+        public int quest_answer_group_id
         {
-            get { return _quest_answer_group_option_id; }
-            set { _quest_answer_group_option_id = value; }
+            get { return _quest_answer_group_id; }
+            set { _quest_answer_group_id = value; }
         }
         public int quest_required
         {
@@ -90,6 +93,29 @@ namespace QuickSurveys
 
             
             return inputTypeForm;
+        }
+
+        public void answerGroupOption()
+        {
+
+            SqlConnection myConnection;
+            SqlCommand myCommand;
+
+            String myConnectionString = ConfigurationManager.ConnectionStrings["MyConnection"].ConnectionString;
+
+            if (myConnectionString.Equals("prod"))
+            {
+                myConnectionString = AppConstant.ProdConnectionString;
+            }
+            else if (myConnectionString.Equals("test"))
+            {
+                myConnectionString = AppConstant.TestConnectionString;
+            }
+            else
+            {
+                myConnectionString = AppConstant.DevConnectionString;
+            }
+
         }
 
 

@@ -18,12 +18,15 @@
         <asp:Label ID="lblQuestSurveySequence" runat="server" Text="-" CssClass="h4"></asp:Label>
         <asp:Label ID="lblQuestionDesc" runat="server" Text="-" CssClass="h4"></asp:Label>
         <asp:Label ID="lblInputType" runat="server" Text="-" ></asp:Label><br /> <br />
-        <asp:Label ID="lblGroupOption" runat="server" Text="Label"></asp:Label>
-        
-        <asp:CheckBoxList runat="server">
+                
+        <asp:CheckBoxList runat="server" ID="cbxAnswerGroupOpt">
         </asp:CheckBoxList>
 
+        <asp:RadioButtonList ID="rdbAnswerGroupOpt" runat="server">
+        </asp:RadioButtonList>
 
+        <asp:DropDownList ID="ddAnswerGroupOpt" runat="server">
+        </asp:DropDownList>
 
         <asp:GridView ID="GridView1" runat="server"  CssClass="table table-hover table-striped">
         </asp:GridView>
