@@ -83,6 +83,15 @@ namespace QuickSurveys
             return 1;
         }
 
+        public int getInputType()
+        {
+            int inputTypeForm = 0;
+
+
+            
+            return inputTypeForm;
+        }
+
 
         #endregion
 

@@ -18,7 +18,7 @@
         <asp:Label ID="lblQuestSurveySequence" runat="server" Text="-" CssClass="h4"></asp:Label>
         <asp:Label ID="lblQuestionDesc" runat="server" Text="-" CssClass="h4"></asp:Label>
         <asp:Label ID="lblInputType" runat="server" Text="-" ></asp:Label><br /> <br />
-        <asp:Label ID="lblGroupOPtion" runat="server" Text="Label"></asp:Label>
+        <asp:Label ID="lblGroupOption" runat="server" Text="Label"></asp:Label>
         
         <asp:CheckBoxList runat="server">
         </asp:CheckBoxList>

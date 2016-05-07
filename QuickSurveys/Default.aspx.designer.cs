@@ -22,15 +22,6 @@ namespace QuickSurveys {
         protected global::System.Web.UI.WebControls.Label lblSurveyDesc;
         
         /// <summary>
-        /// btnSurveys control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnSurveys;
-        
-        /// <summary>
         /// GridView2 control.
         /// </summary>
         /// <remarks>
@@ -67,13 +58,13 @@ namespace QuickSurveys {
         protected global::System.Web.UI.WebControls.Label lblInputType;
         
         /// <summary>
-        /// lblGroupOPtion control.
+        /// lblGroupOption control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblGroupOPtion;
+        protected global::System.Web.UI.WebControls.Label lblGroupOption;
         
         /// <summary>
         /// GridView1 control.
