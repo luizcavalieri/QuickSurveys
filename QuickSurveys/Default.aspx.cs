@@ -8,6 +8,7 @@ using System.Data.SqlClient;
 using System.Data;
 using System.Configuration;
 using System.Collections;
+using System.Diagnostics;
 
 namespace QuickSurveys
 {
@@ -42,57 +43,60 @@ namespace QuickSurveys
             myConnection.ConnectionString = myConnectionString;
         }
 
-        protected void SetSurveyClick(int survId)
-        {
-            if (IsPostBack)
-            {
-                Session["survey_id"] = survId;
-                MultiViewMainPage.ActiveViewIndex = 1;
-            }
-                        
-        }
-
         protected void Page_Load(object sender, EventArgs e)
         {
-
-            MultiViewMainPage.ActiveViewIndex = 0;
-            
-            connectString();
-
-            String queryGetSurvey = @"Select survey_id, survey_description, survey_user_id from surveys";
-
-            myCommand = new SqlCommand(queryGetSurvey, myConnection);
-
-            //open connectio
-            myConnection.Open();
-
-            //open the reader
-            SqlDataReader myReader = myCommand.ExecuteReader();
-
-            int index = 0;
-            ArrayList values = new ArrayList();
-            
-            while (myReader.Read())
+            if (!IsPostBack)
             {
-                listSurvey.survey_description = myReader["survey_description"].ToString();
-                listSurvey.survey_id = Int32.Parse(myReader["survey_id"].ToString());
-                listSurvey.survey_user_id = Int32.Parse(myReader["survey_user_id"].ToString());
-                values.Add(new SurveyData(listSurvey.survey_description, listSurvey.survey_id, listSurvey.survey_user_id));
+                MultiViewMainPage.ActiveViewIndex = 0;
 
-                index++;     
+                connectString();
+
+                String queryGetSurvey = @"Select survey_id, survey_description, survey_user_id from surveys";
+
+                myCommand = new SqlCommand(queryGetSurvey, myConnection);
+
+                LinkButton surveyButton = new LinkButton();
+
+                //open connectio
+                myConnection.Open();
+
+                //open the reader
+                SqlDataReader myReader = myCommand.ExecuteReader();
+
+                int index = 0;
+                ArrayList values = new ArrayList();
+
+                while (myReader.Read())
+                {
+                    listSurvey.survey_description = myReader["survey_description"].ToString();
+                    listSurvey.survey_id = Int32.Parse(myReader["survey_id"].ToString());
+                    listSurvey.survey_user_id = Int32.Parse(myReader["survey_user_id"].ToString());
+                    values.Add(new SurveyData(listSurvey.survey_description, listSurvey.survey_id, listSurvey.survey_user_id));
+
+                    index++;
+                }
+
+                RepeaterSurvey.DataSource = values;
+                RepeaterSurvey.DataBind();
+
+
+                myConnection.Close();
+
+                int surveyId = 1;
+                int questSequence = 8;
+
+                GetQuestion(surveyId, questSequence);
+
             }
 
-            RepeaterSurvey.DataSource = values;
-            RepeaterSurvey.DataBind();
-                
-            
-            myConnection.Close();
-            
-            int surveyId = 1;
-            int questSequence = 8;
+        }
 
-            GetQuestion(surveyId, questSequence);
-
+        protected void SurveyButton_Click(Object sender, EventArgs e)
+        {
+            
+            Session["survey_id"] = listSurvey.survey_id;
+            MultiViewMainPage.ActiveViewIndex = 1;
+            Debug.Write("This is triggered");
 
         }
 
@@ -169,6 +173,7 @@ namespace QuickSurveys
             lblQuestionDesc.Text = currentQuestion.quest_description;
             lblQuestSurveySequence.Text = currentQuestion.quest_survey_sequence.ToString();
             lblSurveyDesc.Text = currentSurvey.survey_description;
+            lblSurveySession.Text = Session["survey_id"].ToString();
             //lblTestAnswerGroup.Text = currentQuestion.quest_answer_group_id.ToString();
         
         }

@@ -58,6 +58,15 @@ namespace QuickSurveys {
         protected global::System.Web.UI.WebControls.Label lblSurveyDesc;
         
         /// <summary>
+        /// lblSurveySession control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblSurveySession;
+        
+        /// <summary>
         /// lblQuestSurveySequence control.
         /// </summary>
         /// <remarks>

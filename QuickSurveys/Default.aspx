@@ -17,7 +17,8 @@
                 <asp:Repeater ID="RepeaterSurvey" runat="server">
                     <ItemTemplate>
                         <%--<asp:LinkButton ID="ButtonSurvey" runat="server" Text='<%# Eval("survey_description") %>' CssClass="form-control btn btn-info btn-lg" OnClientClick='return SetSurveyClick(<%# Eval("survey_id") %>)' />--%>
-                        <asp:LinkButton ID="SurveyButton" runat="server" Text='<%# Eval("survey_description") %>' Font-Size="22px" CssClass="form-control btn btn-info btn-lg" ></asp:LinkButton>
+                        <%--<asp:Button ID="SurveyButton" runat="server" Text='<%# Eval("survey_description") %>' onclick="SurveyButton_click" Font-Size="22px" CssClass="form-control btn btn-info btn-lg" ></asp:Button>--%>
+                        <asp:Button ID="SurveyButton" runat="server" Text='<%# Eval("survey_description") %>' Font-Size="22px" CssClass="form-control btn btn-info btn-lg" onclick="SurveyButton_Click" />
                         <br / > <br />
                     </ItemTemplate>
                     
@@ -31,6 +32,7 @@
             <%-- START QUESTIONS BLOCK --%>
                 <div class="col-lg-5">
                 <asp:Label ID="lblSurveyDesc" runat="server" Text="Label" CssClass="h2"></asp:Label>
+                <asp:Label ID="lblSurveySession" runat="server" Text="Label" CssClass="h2"></asp:Label>
                 <br /> <br />
                 <asp:Label ID="lblQuestSurveySequence" runat="server" Text="-" CssClass="h4"></asp:Label>
                 <asp:Label ID="lblQuestionDesc" runat="server" Text="-" CssClass="h4"></asp:Label>
