@@ -21,7 +21,6 @@ namespace QuickSurveys
         public void connectString()
         {
             
-            
             String myConnectionString = ConfigurationManager.ConnectionStrings["MyConnection"].ConnectionString;
 
             if (myConnectionString.Equals("prod"))
@@ -43,12 +42,40 @@ namespace QuickSurveys
 
         protected void Page_Load(object sender, EventArgs e)
         {
-           
             connectString();
-           
-            int yourIndex = 1;
-            int questSequence = 2;
 
+            String queryGetSurvey = @"Select survey_id, survey_description, survey_user_id from surveys";
+
+            myCommand = new SqlCommand(queryGetSurvey, myConnection);
+
+            //open connectio
+            myConnection.Open();
+
+            //open the reader
+            SqlDataReader myReader = myCommand.ExecuteReader();
+
+            if (myReader.Read()) {
+                currentSurvey.survey_description = myReader["survey_description"].ToString();
+                currentSurvey.survey_description = myReader["survey_description"].ToString();
+            }
+
+
+
+            myConnection.Close();
+            
+            int surveyId = 1;
+            int questSequence = 8;
+
+            GetQuestion(surveyId, questSequence);
+
+
+        }
+
+        private void GetQuestion(int surveyId, int questSequence)
+        {
+
+            connectString();
+            
             String queryQuestionInputType = @"SELECT qt.quest_id, 
                                                      qt.quest_description, 
                                                      qt.quest_survey_id,
@@ -56,16 +83,13 @@ namespace QuickSurveys
                                                      qt.quest_input_type_id, 
                                                      qt.quest_answer_group_id, 
                                                      it.input_type_desc, 
-                                                     srv.survey_description, 
-                                                     ago.answer_group_option_desc
+                                                     srv.survey_description 
                                              FROM questions qt
                                              JOIN input_type it
                                              ON qt.quest_input_type_id = it.input_type_id
                                              Join surveys srv 
                                              ON qt.quest_survey_id = srv.survey_id
-                                             Join answer_group_option ago
-                                             on qt.quest_answer_group_id = ago.answer_group_id                                                                  
-                                             where quest_survey_id = " + yourIndex +@" and 
+                                             where quest_survey_id = " + surveyId + @" and 
                                                    quest_survey_sequence = " + questSequence;
 
 
@@ -83,23 +107,44 @@ namespace QuickSurveys
                 currentQuestion.quest_description = myReader["quest_description"].ToString();
                 currentQuestion.quest_survey_sequence = Int32.Parse(myReader["quest_survey_sequence"].ToString());
                 currentSurvey.survey_description = myReader["survey_description"].ToString();
-                currentQuestion.quest_answer_group_id = Int32.Parse(myReader["quest_answer_group_id"].ToString());
-                
+                //currentQuestion.quest_answer_group_id = Int32.Parse(myReader["quest_answer_group_id"].ToString());
+                currentQuestion.quest_answer_group_id = string.IsNullOrEmpty(myReader["quest_answer_group_id"].ToString()) ? 0 : int.Parse(myReader["quest_answer_group_id"].ToString());
+                currentQuestion.quest_input_type_id = Int32.Parse(myReader["quest_input_type_id"].ToString());
+
+                int inputType = currentQuestion.quest_input_type_id;
                 int answerGroupId = currentQuestion.quest_answer_group_id;
 
-                FillCheckBox(answerGroupId);
+                if (inputType == 1 || inputType == 2 || inputType == 18)
+                {
+                    FillCheckBox(answerGroupId, inputType);
+                }
+                else if(inputType == 10)
+                {
+                    numberBox.Visible = true;
+                }
+                else if (inputType == 19)
+                {
+                    textAreaBox.Visible = true;
+                }
+                else if (inputType == 3)
+                {
+                    textBox.Visible = true;
+                }
+
+
 
             }
 
             lblQuestionDesc.Text = currentQuestion.quest_description;
             lblQuestSurveySequence.Text = currentQuestion.quest_survey_sequence.ToString();
             lblSurveyDesc.Text = currentSurvey.survey_description;
-              
-
+            //lblTestAnswerGroup.Text = currentQuestion.quest_answer_group_id.ToString();
+        
         }
 
 
-        private void FillCheckBox(int answerGroupId)
+
+        private void FillCheckBox(int answerGroupId, int inputType)
         {
 
             connectString();
@@ -125,7 +170,21 @@ namespace QuickSurveys
                 item.Text = readerChbx["answer_group_option_desc"].ToString();
                 item.Value = readerChbx["answer_group_option_id"].ToString();
 
-                ddAnswerGroupOpt.Items.Add(item);
+                if (inputType == 1)
+                {
+                    cbxAnswerGroupOpt.Items.Add(item);
+                    
+                }
+                else if (inputType == 2)
+                {
+                    rdbAnswerGroupOpt.Items.Add(item);
+                    
+                }
+                else if (inputType == 18)
+                {
+                    ddAnswerGroupOpt.Visible = true;
+                    ddAnswerGroupOpt.Items.Add(item);
+                }
             }
 
             myConnection.Close();
