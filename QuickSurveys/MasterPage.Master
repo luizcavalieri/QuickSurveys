@@ -34,7 +34,7 @@
         </asp:ContentPlaceHolder>
 
         <div id="footer" class="navbar-fixed-bottom">
-        <asp:Panel ID="panelFooter" runat="server" BackColor="#0BD9D3" Height="81px" CssClass="panel-footer">
+        <asp:Panel ID="panelFooter" runat="server" BackColor="#0066CC" Height="50px" CssClass="panel-footer">
             
         </asp:Panel>
         </div>

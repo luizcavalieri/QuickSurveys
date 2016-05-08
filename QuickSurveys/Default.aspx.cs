@@ -7,6 +7,7 @@ using System.Web.UI.WebControls;
 using System.Data.SqlClient;
 using System.Data;
 using System.Configuration;
+using System.Collections;
 
 namespace QuickSurveys
 {
@@ -15,6 +16,7 @@ namespace QuickSurveys
         // creating object from class question
         Question currentQuestion = new Question();
         Survey currentSurvey = new Survey();
+        Survey listSurvey = new Survey();
         SqlConnection myConnection;
         SqlCommand myCommand;
 
@@ -40,8 +42,21 @@ namespace QuickSurveys
             myConnection.ConnectionString = myConnectionString;
         }
 
+        protected void SetSurveyClick(int survId)
+        {
+            if (IsPostBack)
+            {
+                Session["survey_id"] = survId;
+                MultiViewMainPage.ActiveViewIndex = 1;
+            }
+                        
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
+
+            MultiViewMainPage.ActiveViewIndex = 0;
+            
             connectString();
 
             String queryGetSurvey = @"Select survey_id, survey_description, survey_user_id from surveys";
@@ -54,13 +69,23 @@ namespace QuickSurveys
             //open the reader
             SqlDataReader myReader = myCommand.ExecuteReader();
 
-            if (myReader.Read()) {
-                currentSurvey.survey_description = myReader["survey_description"].ToString();
-                currentSurvey.survey_description = myReader["survey_description"].ToString();
+            int index = 0;
+            ArrayList values = new ArrayList();
+            
+            while (myReader.Read())
+            {
+                listSurvey.survey_description = myReader["survey_description"].ToString();
+                listSurvey.survey_id = Int32.Parse(myReader["survey_id"].ToString());
+                listSurvey.survey_user_id = Int32.Parse(myReader["survey_user_id"].ToString());
+                values.Add(new SurveyData(listSurvey.survey_description, listSurvey.survey_id, listSurvey.survey_user_id));
+
+                index++;     
             }
 
-
-
+            RepeaterSurvey.DataSource = values;
+            RepeaterSurvey.DataBind();
+                
+            
             myConnection.Close();
             
             int surveyId = 1;
@@ -130,6 +155,12 @@ namespace QuickSurveys
                 {
                     textBox.Visible = true;
                 }
+                else
+                {
+                    textBox.Visible = false;
+                    textAreaBox.Visible = false;
+                    numberBox.Visible = false;
+                }
 
 
 
@@ -191,41 +222,6 @@ namespace QuickSurveys
 
         }
 
-        protected void GridView1_RowDataBound1(object sender, GridViewRowEventArgs e)
-        {
-            //if (e.Row.RowType.Equals(DataControlRowType.DataRow))
-            //{
-            //    //Image img = new Image();
-
-            //if (e.Row.Cells[2].Text.Equals("1"))
-            //{
-            //    img.ImageUrl = "~/images/pawn.gif";
-            //}
-            //else if (e.Row.Cells[2].Text.Equals("2"))
-            //{
-            //    img.ImageUrl = "~/images/knight.gif";
-            //}
-            //else
-            //{
-            //    img.ImageUrl = "~/images/king.gif";
-            //}
-            //e.Row.Cells[2].Controls.Add(img);
-
-            //CheckBox chk = new CheckBox();
-
-            //chk.ID = "selectedId";
-            //e.Row.Cells[0].Controls.Add(chk);
-
-            DropDownList ddl = new DropDownList();
-
-            for (int i = 1; i <= Int32.Parse(e.Row.Cells[1].Text); i++)
-            {
-                ddl.Items.Add(i.ToString());
-            }
-
-            //e.Row.Cells[1].Controls.Add(ddl);
-
-
-        }
+        
     }
 }
