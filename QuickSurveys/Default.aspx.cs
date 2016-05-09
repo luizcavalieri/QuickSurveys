@@ -51,9 +51,6 @@ namespace QuickSurveys
 
                 GetSurveyButtons();
 
-
-                
-
             }
 
         }
@@ -62,11 +59,12 @@ namespace QuickSurveys
         {
             Button btn = (Button)sender;
             Session["survey_id"] = btn.CommandArgument.ToString();
+            Session["quest_survey_sequence"] = 1;
 
             if (!string.IsNullOrEmpty(Session["survey_id"] as string))
             {
                 int surveyId = Int32.Parse(Session["survey_id"].ToString());
-                int questSequence = 5;
+                int questSequence = Int32.Parse(Session["quest_survey_sequence"].ToString());
                 GetQuestion(surveyId, questSequence);
                 MultiViewMainPage.ActiveViewIndex = 1;
 
@@ -166,20 +164,38 @@ namespace QuickSurveys
                 else if(inputType == 10)
                 {
                     numberBox.Visible = true;
+                    textAreaBox.Visible = false;
+                    textBox.Visible = false;
+                    cbxAnswerGroupOpt.Visible = false;
+                    rdbAnswerGroupOpt.Visible = false;
+                    ddAnswerGroupOpt.Visible = false;
                 }
                 else if (inputType == 19)
                 {
                     textAreaBox.Visible = true;
+                    numberBox.Visible = false;
+                    textBox.Visible = false;
+                    cbxAnswerGroupOpt.Visible = false;
+                    rdbAnswerGroupOpt.Visible = false;
+                    ddAnswerGroupOpt.Visible = false;
                 }
                 else if (inputType == 3)
                 {
                     textBox.Visible = true;
+                    numberBox.Visible = false;
+                    textAreaBox.Visible = false;
+                    cbxAnswerGroupOpt.Visible = false;
+                    rdbAnswerGroupOpt.Visible = false;
+                    ddAnswerGroupOpt.Visible = false;
                 }
                 else
                 {
                     textBox.Visible = false;
                     textAreaBox.Visible = false;
                     numberBox.Visible = false;
+                    cbxAnswerGroupOpt.Visible = false;
+                    rdbAnswerGroupOpt.Visible = false;
+                    ddAnswerGroupOpt.Visible = false;
                 }
 
 
@@ -189,7 +205,7 @@ namespace QuickSurveys
             lblQuestionDesc.Text = currentQuestion.quest_description;
             lblQuestSurveySequence.Text = currentQuestion.quest_survey_sequence.ToString();
             lblSurveyDesc.Text = currentSurvey.survey_description;
-            //lblSurveySession.Text = Session["survey_id"].ToString();
+            lblSurveySession.Text = Session["survey_id"].ToString();
             //lblTestAnswerGroup.Text = currentQuestion.quest_answer_group_id.ToString();
         
         }
@@ -224,23 +240,53 @@ namespace QuickSurveys
 
                 if (inputType == 1)
                 {
+                    cbxAnswerGroupOpt.Visible = true;
                     cbxAnswerGroupOpt.Items.Add(item);
+                    textBox.Visible = false;
+                    textAreaBox.Visible = false;
+                    numberBox.Visible = false;
+                    rdbAnswerGroupOpt.Visible = false;
+                    ddAnswerGroupOpt.Visible = false;
                     
                 }
                 else if (inputType == 2)
                 {
+                    rdbAnswerGroupOpt.Visible = true;
                     rdbAnswerGroupOpt.Items.Add(item);
+                    textBox.Visible = false;
+                    textAreaBox.Visible = false;
+                    numberBox.Visible = false;
+                    cbxAnswerGroupOpt.Visible = false;
+                    ddAnswerGroupOpt.Visible = false;
                     
                 }
                 else if (inputType == 18)
                 {
                     ddAnswerGroupOpt.Visible = true;
                     ddAnswerGroupOpt.Items.Add(item);
+                    textBox.Visible = false;
+                    textAreaBox.Visible = false;
+                    numberBox.Visible = false;
+                    cbxAnswerGroupOpt.Visible = false;
+                    rdbAnswerGroupOpt.Visible = false;
+                   
                 }
             }
-
+            readerChbx.Close();
             myConnection.Close();
 
+        }
+
+        protected void SaveAndNextQuest_Click(object sender, EventArgs e)
+        {
+            
+            Session["quest_survey_sequence_TEMP"] = Int32.Parse(Session["quest_survey_sequence"].ToString()) + 1;
+
+            Session["quest_survey_sequence"] = Int32.Parse(Session["quest_survey_sequence_TEMP"].ToString());
+
+            int survSequence = Int32.Parse(Session["quest_survey_sequence"].ToString());
+            int survId = Int32.Parse(Session["survey_id"].ToString());
+            GetQuestion(survId, survSequence);
         }
 
         

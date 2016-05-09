@@ -66,7 +66,8 @@
                 </div>
                 <br /> 
                 
-                <asp:Button ID="btnSubmit" runat="server" Text="Next Question >>" CssClass="btn btn-success form-control"/>
+                <asp:Button ID="btnSubmit" runat="server" Text="Next Question >>" 
+                        CssClass="btn btn-success form-control" onclick="SaveAndNextQuest_Click"/>
             
             </div>
 
