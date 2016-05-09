@@ -20,7 +20,7 @@ namespace QuickSurveys
         Survey listSurvey = new Survey();
         SqlConnection myConnection;
         SqlCommand myCommand;
-
+        
         public void connectString()
         {
             
@@ -49,43 +49,10 @@ namespace QuickSurveys
             {
                 MultiViewMainPage.ActiveViewIndex = 0;
 
-                connectString();
-
-                String queryGetSurvey = @"Select survey_id, survey_description, survey_user_id from surveys";
-
-                myCommand = new SqlCommand(queryGetSurvey, myConnection);
-
-                LinkButton surveyButton = new LinkButton();
-
-                //open connectio
-                myConnection.Open();
-
-                //open the reader
-                SqlDataReader myReader = myCommand.ExecuteReader();
-
-                int index = 0;
-                ArrayList values = new ArrayList();
-
-                while (myReader.Read())
-                {
-                    listSurvey.survey_description = myReader["survey_description"].ToString();
-                    listSurvey.survey_id = Int32.Parse(myReader["survey_id"].ToString());
-                    listSurvey.survey_user_id = Int32.Parse(myReader["survey_user_id"].ToString());
-                    values.Add(new SurveyData(listSurvey.survey_description, listSurvey.survey_id, listSurvey.survey_user_id));
-
-                    index++;
-                }
-
-                RepeaterSurvey.DataSource = values;
-                RepeaterSurvey.DataBind();
+                GetSurveyButtons();
 
 
-                myConnection.Close();
-
-                int surveyId = 1;
-                int questSequence = 8;
-
-                GetQuestion(surveyId, questSequence);
+                
 
             }
 
@@ -93,11 +60,60 @@ namespace QuickSurveys
 
         protected void SurveyButton_Click(Object sender, EventArgs e)
         {
-            
-            Session["survey_id"] = listSurvey.survey_id;
-            MultiViewMainPage.ActiveViewIndex = 1;
-            Debug.Write("This is triggered");
+            Button btn = (Button)sender;
+            Session["survey_id"] = btn.CommandArgument.ToString();
 
+            if (!string.IsNullOrEmpty(Session["survey_id"] as string))
+            {
+                int surveyId = Int32.Parse(Session["survey_id"].ToString());
+                int questSequence = 5;
+                GetQuestion(surveyId, questSequence);
+                MultiViewMainPage.ActiveViewIndex = 1;
+
+            }
+            
+
+
+            Debug.Write(Session["survey_id"]);
+
+            
+
+        }
+
+        private void GetSurveyButtons()
+        {
+            connectString();
+
+            String queryGetSurvey = @"Select survey_id, survey_description, survey_user_id from surveys";
+
+            myCommand = new SqlCommand(queryGetSurvey, myConnection);
+
+            LinkButton surveyButton = new LinkButton();
+
+            //open connectio
+            myConnection.Open();
+
+            //open the reader
+            SqlDataReader myReader = myCommand.ExecuteReader();
+
+            int index = 0;
+            ArrayList values = new ArrayList();
+
+            while (myReader.Read())
+            {
+                listSurvey.survey_description = myReader["survey_description"].ToString();
+                listSurvey.survey_id = Int32.Parse(myReader["survey_id"].ToString());
+                listSurvey.survey_user_id = Int32.Parse(myReader["survey_user_id"].ToString());
+                values.Add(new SurveyData(listSurvey.survey_description, listSurvey.survey_id, listSurvey.survey_user_id));
+
+                index++;
+            }
+
+            RepeaterSurvey.DataSource = values;
+            RepeaterSurvey.DataBind();
+
+
+            myConnection.Close();
         }
 
         private void GetQuestion(int surveyId, int questSequence)
@@ -173,7 +189,7 @@ namespace QuickSurveys
             lblQuestionDesc.Text = currentQuestion.quest_description;
             lblQuestSurveySequence.Text = currentQuestion.quest_survey_sequence.ToString();
             lblSurveyDesc.Text = currentSurvey.survey_description;
-            lblSurveySession.Text = Session["survey_id"].ToString();
+            //lblSurveySession.Text = Session["survey_id"].ToString();
             //lblTestAnswerGroup.Text = currentQuestion.quest_answer_group_id.ToString();
         
         }

@@ -14,14 +14,16 @@
             <asp:View ID="SurveyBlockView" runat="server" EnableViewState="true" ViewStateMode="Enabled">
              <%-- START SURVEYS BLOCK --%>
              <h1> Choose Your Survey </h1>
-                <asp:Repeater ID="RepeaterSurvey" runat="server">
+                <asp:Repeater ID="RepeaterSurvey" runat="server" >
                     <ItemTemplate>
-                        <%--<asp:LinkButton ID="ButtonSurvey" runat="server" Text='<%# Eval("survey_description") %>' CssClass="form-control btn btn-info btn-lg" OnClientClick='return SetSurveyClick(<%# Eval("survey_id") %>)' />--%>
-                        <%--<asp:Button ID="SurveyButton" runat="server" Text='<%# Eval("survey_description") %>' onclick="SurveyButton_click" Font-Size="22px" CssClass="form-control btn btn-info btn-lg" ></asp:Button>--%>
-                        <asp:Button ID="SurveyButton" runat="server" Text='<%# Eval("survey_description") %>' Font-Size="22px" CssClass="form-control btn btn-info btn-lg" onclick="SurveyButton_Click" />
-                        <br / > <br />
+                            <%--<asp:LinkButton ID="ButtonSurvey" runat="server" Text='<%# Eval("survey_description") %>' CssClass="form-control btn btn-info btn-lg" OnClientClick='return SetSurveyClick(<%# Eval("survey_id") %>)' />--%>
+                            <%--<asp:Button ID="SurveyButton" runat="server" Text='<%# Eval("survey_description") %>' onclick="SurveyButton_click" Font-Size="22px" CssClass="form-control btn btn-info btn-lg" ></asp:Button>--%>
+                            <asp:Button ID="SurveyButton" runat="server" Text='<%# Eval("survey_description") %>' Font-Size="22px" CssClass="form-control btn btn-info btn-lg" onclick="SurveyButton_Click" CommandArgument='<%# Eval("survey_id") %>' CommandName='btn<%# Eval("survey_id") %>' />
+                            
+                            <%--<asp:PlaceHolder ID="suveyTbxHolder" runat="server"></asp:PlaceHolder>--%>
+                            <%--<asp:TextBox ID="tbxSurveyId" runat="server" Text='<%# Eval("survey_id") %>' Visible="False" AutoPostBack="True"></asp:TextBox>--%>
+                            <br / > <br />
                     </ItemTemplate>
-                    
                 </asp:Repeater>
 
 
