@@ -47,9 +47,20 @@ namespace QuickSurveys
         {
             if (!IsPostBack)
             {
-                MultiViewMainPage.ActiveViewIndex = 0;
+                if (!string.IsNullOrEmpty(Session["survey_id"] as string))
+                {
+                    MultiViewMainPage.ActiveViewIndex = 1;
 
-                GetSurveyButtons();
+                    int survSequence = Int32.Parse(Session["quest_survey_sequence"].ToString());
+                    int survId = Int32.Parse(Session["survey_id"].ToString());
+                    GetQuestion(survId, survSequence);
+                }
+                else 
+                {
+                    MultiViewMainPage.ActiveViewIndex = 0;
+
+                    GetSurveyButtons();
+                }
 
             }
 
@@ -286,7 +297,8 @@ namespace QuickSurveys
 
             int survSequence = Int32.Parse(Session["quest_survey_sequence"].ToString());
             int survId = Int32.Parse(Session["survey_id"].ToString());
-            GetQuestion(survId, survSequence);
+            Response.Redirect("~/Default.aspx");
+            //GetQuestion(survId, survSequence);
         }
 
         
