@@ -55,6 +55,8 @@ namespace QuickSurveys
 
         }
 
+
+        // respondent chooses the survey that he wants to answer
         protected void SurveyButton_Click(Object sender, EventArgs e)
         {
             Button btn = (Button)sender;
@@ -78,10 +80,12 @@ namespace QuickSurveys
 
         }
 
+        // show survey buttons
         private void GetSurveyButtons()
         {
             connectString();
 
+            //get list of surveys
             String queryGetSurvey = @"Select survey_id, survey_description, survey_user_id from surveys";
 
             myCommand = new SqlCommand(queryGetSurvey, myConnection);
@@ -94,7 +98,7 @@ namespace QuickSurveys
             //open the reader
             SqlDataReader myReader = myCommand.ExecuteReader();
 
-            int index = 0;
+            
             ArrayList values = new ArrayList();
 
             while (myReader.Read())
@@ -103,8 +107,6 @@ namespace QuickSurveys
                 listSurvey.survey_id = Int32.Parse(myReader["survey_id"].ToString());
                 listSurvey.survey_user_id = Int32.Parse(myReader["survey_user_id"].ToString());
                 values.Add(new SurveyData(listSurvey.survey_description, listSurvey.survey_id, listSurvey.survey_user_id));
-
-                index++;
             }
 
             RepeaterSurvey.DataSource = values;
@@ -272,6 +274,7 @@ namespace QuickSurveys
                    
                 }
             }
+
             readerChbx.Close();
             myConnection.Close();
 
