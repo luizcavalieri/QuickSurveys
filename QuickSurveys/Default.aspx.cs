@@ -20,6 +20,9 @@ namespace QuickSurveys
         Survey listSurvey = new Survey();
         SqlConnection myConnection;
         SqlCommand myCommand;
+        Answer currentAnswer = new Answer();
+        List<Answer[]> answerList = new List<Answer[]>();
+
         
         public void connectString()
         {
@@ -54,6 +57,7 @@ namespace QuickSurveys
                     int survSequence = Int32.Parse(Session["quest_survey_sequence"].ToString());
                     int survId = Int32.Parse(Session["survey_id"].ToString());
                     GetQuestion(survId, survSequence);
+                    //txtBoxArrayTest.Text = Session["survey_array"].ToString();
                 }
                 else 
                 {
@@ -158,6 +162,7 @@ namespace QuickSurveys
             //open the reader
             SqlDataReader myReader = myCommand.ExecuteReader();
 
+            // populate the objects from the data in the database
             if (myReader.Read()) 
             {
                 currentQuestion.quest_description = myReader["quest_description"].ToString();
@@ -166,6 +171,8 @@ namespace QuickSurveys
                 //currentQuestion.quest_answer_group_id = Int32.Parse(myReader["quest_answer_group_id"].ToString());
                 currentQuestion.quest_answer_group_id = string.IsNullOrEmpty(myReader["quest_answer_group_id"].ToString()) ? 0 : int.Parse(myReader["quest_answer_group_id"].ToString());
                 currentQuestion.quest_input_type_id = Int32.Parse(myReader["quest_input_type_id"].ToString());
+                currentQuestion.quest_id = Int32.Parse(myReader["quest_id"].ToString());
+                Session["current_question"] = currentQuestion.quest_id;
 
                 int inputType = currentQuestion.quest_input_type_id;
                 int answerGroupId = currentQuestion.quest_answer_group_id;
@@ -300,6 +307,24 @@ namespace QuickSurveys
 
             int survSequence = Int32.Parse(Session["quest_survey_sequence"].ToString());
             int survId = Int32.Parse(Session["survey_id"].ToString());
+
+            foreach (ListItem myList in cbxAnswerGroupOpt.Items)
+            {
+                if (myList.Selected)
+                {
+                    currentAnswer.answer_group_option_id = Int32.Parse(myList.Value.ToString());
+                    currentAnswer.answer_question_id = Int32.Parse(Session["current_question"].ToString());
+                    currentAnswer.answer_resp_id = 1;
+                    answerList.Add(currentAnswer);
+                    
+                }
+
+                Session["answer_array"] = answerList.ToArray();
+            }
+
+            
+            Session["all_answers_array"] = Session["answer_array"].Concat().ToArray();
+
             Response.Redirect("~/Default.aspx");
             //GetQuestion(survId, survSequence);
         }
