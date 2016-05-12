@@ -22,6 +22,7 @@ namespace QuickSurveys
         SqlCommand myCommand;
         Answer currentAnswer = new Answer();
         List<Answer[]> answerList = new List<Answer[]>();
+        
 
         
         public void connectString()
@@ -230,8 +231,6 @@ namespace QuickSurveys
         
         }
 
-
-
         private void FillCheckBox(int answerGroupId, int inputType)
         {
 
@@ -298,9 +297,80 @@ namespace QuickSurveys
 
         }
 
+        private int GetNumOfOptions()
+        {
+            int countGroupOption;
+            
+            connectString();
+            
+            String queryCountGroupOption = @"select qt.quest_answer_group_id, 
+		                                            qt.quest_id, 
+		                                            qt.quest_multi_answer, 
+		                                            qt.quest_description,
+		                                            ago.answer_group_logical_answer,
+		                                            ago.answer_group_option_desc		 
+                                            from questions qt
+                                            Join answer_group_option ago
+                                            on qt.quest_answer_group_id = ago.answer_group_id
+                                            where qt.quest_survey_id = " + Session["survey_id"];
+
+
+            //get the sql script executing on the connection
+            myCommand = new SqlCommand(queryCountGroupOption, myConnection);
+
+            //open connectio
+            myConnection.Open();
+
+            //open the reader
+            SqlDataReader readerCountGroupOption = myCommand.ExecuteReader();
+
+            DataTable dtCountGroupOption = new DataTable();
+
+            dtCountGroupOption.Load(readerCountGroupOption);
+            countGroupOption = dtCountGroupOption.Rows.Count;
+
+            myConnection.Close();
+
+
+            int countSingleAnswer;
+
+            connectString();
+
+            String queryCountSingleAnswer = @"select quest_answer_group_id, 
+		                                            quest_id, 
+		                                            quest_multi_answer, 
+		                                            quest_description
+		                                    from questions qt
+                                            where quest_survey_id = " + Session["survey_id"] + @" and
+                                            quest_multi_answer = 0";
+
+
+            //get the sql script executing on the connection
+            myCommand = new SqlCommand(queryCountSingleAnswer, myConnection);
+
+            //open connectio
+            myConnection.Open();
+
+            //open the reader
+            SqlDataReader readerCountSingleAnswer = myCommand.ExecuteReader();
+
+            DataTable dtCountSingleAnswer = new DataTable();
+
+            dtCountSingleAnswer.Load(readerCountSingleAnswer);
+            countSingleAnswer = dtCountSingleAnswer.Rows.Count;
+
+            myConnection.Close();
+
+
+            int countTotalAnswer = countSingleAnswer + countGroupOption;
+
+            return countTotalAnswer;
+        }
+
         protected void SaveAndNextQuest_Click(object sender, EventArgs e)
         {
-            
+            Answer[] answerArray = new Answer[GetNumOfOptions()];
+
             Session["quest_survey_sequence_TEMP"] = Int32.Parse(Session["quest_survey_sequence"].ToString()) + 1;
 
             Session["quest_survey_sequence"] = Int32.Parse(Session["quest_survey_sequence_TEMP"].ToString());
@@ -308,25 +378,43 @@ namespace QuickSurveys
             int survSequence = Int32.Parse(Session["quest_survey_sequence"].ToString());
             int survId = Int32.Parse(Session["survey_id"].ToString());
 
+            int indexAnswerArray = GetIndexAnserArray();
+
+            
             foreach (ListItem myList in cbxAnswerGroupOpt.Items)
             {
                 if (myList.Selected)
                 {
-                    currentAnswer.answer_group_option_id = Int32.Parse(myList.Value.ToString());
-                    currentAnswer.answer_question_id = Int32.Parse(Session["current_question"].ToString());
-                    currentAnswer.answer_resp_id = 1;
-                    answerList.Add(currentAnswer);
+                    answerArray[indexAnswerArray] = new Answer();
+                    answerArray[indexAnswerArray].answer_group_option_id = Int32.Parse(myList.Value.ToString());
+                    answerArray[indexAnswerArray].answer_question_id = Int32.Parse(Session["current_question"].ToString());
+                    answerArray[indexAnswerArray].answer_resp_id = 1;
                     
                 }
 
-                Session["answer_array"] = answerList.ToArray();
-            }
+                indexAnswerArray++;
 
-            
-            Session["all_answers_array"] = Session["answer_array"].Concat().ToArray();
+                Session["answer_array"] = answerArray[survSequence];
+            }
 
             Response.Redirect("~/Default.aspx");
             //GetQuestion(survId, survSequence);
+        }
+
+        private int GetIndexAnserArray()
+        {
+            int indexAnswerArray;
+
+            if (string.IsNullOrEmpty(Session["array_answer_index"] as string))
+            {
+                indexAnswerArray = 0;
+            }
+            else
+            {
+                indexAnswerArray = Int32.Parse(Session["array_answer_index"].ToString());
+            }
+
+            return indexAnswerArray;
         }
 
         

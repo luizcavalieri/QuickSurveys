@@ -12,11 +12,11 @@ namespace QuickSurveys
         #region Fields
 
         private string _answer_text;
-        private int _answer_numeric;
-        private bool _answer_boolean;
+        private int? _answer_numeric;
+        private bool? _answer_boolean;
         private int _answer_resp_id;
         private int _answer_question_id;
-        private int _answer_group_option_id;
+        private int? _answer_group_option_id;
 
         #endregion
 
@@ -27,12 +27,12 @@ namespace QuickSurveys
             get { return _answer_text; }
             set { _answer_text = value; }
         }
-        public int answer_numeric
+        public int? answer_numeric
         {
             get { return _answer_numeric; }
             set { _answer_numeric = value; }
         }
-        public bool answer_boolean
+        public bool? answer_boolean
         {
             get { return _answer_boolean; }
             set { _answer_boolean = value; }
@@ -47,7 +47,7 @@ namespace QuickSurveys
             get { return _answer_question_id; }
             set { _answer_question_id = value; }
         }
-        public int answer_group_option_id
+        public int? answer_group_option_id
         {
             get { return _answer_group_option_id; }
             set { _answer_group_option_id = value; }
@@ -56,8 +56,6 @@ namespace QuickSurveys
         #endregion
 
         # region method
-
-        
 
         #endregion
     }
