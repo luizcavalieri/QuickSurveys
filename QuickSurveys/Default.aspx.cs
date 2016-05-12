@@ -24,7 +24,7 @@ namespace QuickSurveys
         List<Answer[]> answerList = new List<Answer[]>();
         
 
-        
+        // open the connection with the database.
         public void connectString()
         {
             
@@ -70,7 +70,6 @@ namespace QuickSurveys
             }
 
         }
-
 
         // respondent chooses the survey that he wants to answer
         protected void SurveyButton_Click(Object sender, EventArgs e)
@@ -132,11 +131,16 @@ namespace QuickSurveys
             myConnection.Close();
         }
 
+        // show questions by the survey and sequence
         private void GetQuestion(int surveyId, int questSequence)
         {
 
             connectString();
-            
+            if (!GetLogicalAnswer(Session))
+            {
+
+            }
+
             String queryQuestionInputType = @"SELECT qt.quest_id, 
                                                      qt.quest_description, 
                                                      qt.quest_survey_id,
@@ -231,6 +235,7 @@ namespace QuickSurveys
         
         }
 
+        // fill the checkboxes, radiobuttons and dropdown lists with the answer options.
         private void FillCheckBox(int answerGroupId, int inputType)
         {
 
@@ -297,6 +302,7 @@ namespace QuickSurveys
 
         }
 
+        // get the number of options of answers to use in the array object answer 
         private int GetNumOfOptions()
         {
             int countGroupOption;
@@ -367,8 +373,10 @@ namespace QuickSurveys
             return countTotalAnswer;
         }
 
+        // clicking on the next button in the question
         protected void SaveAndNextQuest_Click(object sender, EventArgs e)
         {
+
             Answer[] answerArray = new Answer[GetNumOfOptions()];
 
             Session["quest_survey_sequence_TEMP"] = Int32.Parse(Session["quest_survey_sequence"].ToString()) + 1;
@@ -378,9 +386,15 @@ namespace QuickSurveys
             int survSequence = Int32.Parse(Session["quest_survey_sequence"].ToString());
             int survId = Int32.Parse(Session["survey_id"].ToString());
 
-            int indexAnswerArray = GetIndexAnserArray();
+            int indexAnswerArray = GetIndexAnswerArray();
 
-            
+            if (string.IsNullOrEmpty(Session["answer_array"] as string))
+            {
+                answerArray[indexAnswerArray] = (Answer)Session["answer_array"];
+            }
+
+            Int32 answerGroupOptionChild;
+
             foreach (ListItem myList in cbxAnswerGroupOpt.Items)
             {
                 if (myList.Selected)
@@ -389,19 +403,22 @@ namespace QuickSurveys
                     answerArray[indexAnswerArray].answer_group_option_id = Int32.Parse(myList.Value.ToString());
                     answerArray[indexAnswerArray].answer_question_id = Int32.Parse(Session["current_question"].ToString());
                     answerArray[indexAnswerArray].answer_resp_id = 1;
-                    
+                    answerGroupOptionChild = Int32.Parse(myList.Value.ToString());
+                    indexAnswerArray++;
                 }
-
-                indexAnswerArray++;
-
-                Session["answer_array"] = answerArray[survSequence];
+                
             }
+
+
+
+            Session["answer_array"] = answerArray;
+            Session["array_answer_index"] = indexAnswerArray;
 
             Response.Redirect("~/Default.aspx");
             //GetQuestion(survId, survSequence);
         }
 
-        private int GetIndexAnserArray()
+        public int GetIndexAnswerArray()
         {
             int indexAnswerArray;
 
@@ -417,6 +434,37 @@ namespace QuickSurveys
             return indexAnswerArray;
         }
 
-        
+        // check if the answer has a child question
+        private bool GetLogicalAnswer(int answerGroupOptionChild)
+        {
+            
+            connectString();
+
+            String queryAnswerLogical = @"Select answer_group_logical_answer from answer_group_option
+                                          where answer_group_option_id = " + answerGroupOptionChild;
+
+
+            //get the sql script executing on the connection
+            myCommand = new SqlCommand(queryAnswerLogical, myConnection);
+
+            //open connectio
+            myConnection.Open();
+
+            //open the reader
+            SqlDataReader readerCountGroupOption = myCommand.ExecuteReader();
+
+            int questionChild = Int32.Parse(readerCountGroupOption["answer_group_logical_answer"].ToString());
+           
+            myConnection.Close();
+
+            if (questionChild == 1)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }
