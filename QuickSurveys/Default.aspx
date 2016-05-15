@@ -38,7 +38,6 @@
                 <br /> <br />
                 <asp:Label ID="lblQuestSurveySequence" runat="server" Text="-" CssClass="h4"></asp:Label>
                 <asp:Label ID="lblQuestionDesc" runat="server" Text="-" CssClass="h4"></asp:Label>
-                <asp:TextBox ID="txtBoxArrayTest" runat="server"></asp:TextBox>
                 <%--<asp:Label ID="lblInputType" runat="server" Text="-" ></asp:Label><br /> <br />--%>
                 <%--<asp:Label ID="lblTestAnswerGroup" runat="server" Text="-" ></asp:Label><br /> <br />--%>
             

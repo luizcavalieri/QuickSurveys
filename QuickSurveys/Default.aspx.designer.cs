@@ -85,15 +85,6 @@ namespace QuickSurveys {
         protected global::System.Web.UI.WebControls.Label lblQuestionDesc;
         
         /// <summary>
-        /// txtBoxArrayTest control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtBoxArrayTest;
-        
-        /// <summary>
         /// cbxAnswerGroupOpt control.
         /// </summary>
         /// <remarks>

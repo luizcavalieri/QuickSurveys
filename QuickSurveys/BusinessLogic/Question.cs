@@ -19,7 +19,7 @@ namespace QuickSurveys
         private int _quest_required;
         private int _quest_input_type_id;
         private int _quest_survey_id;
-        private int _quest_survey_sequence;
+        private int? _quest_survey_sequence;
         private int _quest_main_id;
         private int _quest_child_sequence;
 
@@ -58,7 +58,7 @@ namespace QuickSurveys
             get { return _quest_survey_id; }
             set { _quest_survey_id = value; }
         }
-        public int quest_survey_sequence
+        public int? quest_survey_sequence
         {
             get { return _quest_survey_sequence; }
             set { _quest_survey_sequence = value; }
