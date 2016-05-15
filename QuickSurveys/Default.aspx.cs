@@ -47,6 +47,7 @@ namespace QuickSurveys
             myConnection.ConnectionString = myConnectionString;
         }
 
+        // page_load when the application is loaded -- the first function to happen
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -196,7 +197,7 @@ namespace QuickSurveys
                                              Join surveys srv 
                                              ON qt.quest_survey_id = srv.survey_id
                                              where quest_survey_id = " + surveyId + @" and 
-                                                   quest_survey_sequence = " + questSequence;
+                                                   quest_survey_sequence = " +questSequence;
 
 
                 //get the sql script executing on the connection
@@ -446,11 +447,14 @@ namespace QuickSurveys
             //GetQuestion(survId, survSequence);
         }
 
+        // getting the answer depending on the input type
+        // input types treated RadioButton, CheckBox, TextBox, DropDownList, NumericAnswer, 
         public void GetAnswersByInputType(int indexAnswerArray, bool answerGroupOptionChild, Answer[] answerArray) 
         {
 
             int inputType = Int32.Parse(Session["input_type"].ToString());
 
+            // if the input type is CHECKBOX
             if (inputType == 1)
             {
                 foreach (ListItem myList in cbxAnswerGroupOpt.Items)
@@ -471,27 +475,78 @@ namespace QuickSurveys
                     }
                 }
             }
+            
+            // if the input type is RADIOBUTTON
             else if (inputType == 2)
             {
                 answerArray[indexAnswerArray] = new Answer();
-                answerArray[indexAnswerArray].answer_group_option_id = Int32.Parse(rdbAnswerGroupOpt.SelectedValue.ToString());
+                answerArray[indexAnswerArray].answer_group_option_id = string.IsNullOrEmpty(rdbAnswerGroupOpt.SelectedValue.ToString()) ? 0 : int.Parse(rdbAnswerGroupOpt.SelectedValue.ToString());
                 answerArray[indexAnswerArray].answer_question_id = Int32.Parse(Session["current_question"].ToString());
                 answerArray[indexAnswerArray].answer_resp_id = 1;
+                int answerGroupOptionId = int.Parse(answerArray[indexAnswerArray].answer_group_option_id.ToString());
                 indexAnswerArray++;
-                int answerGroupOptionId = Int32.Parse(rdbAnswerGroupOpt.SelectedValue.ToString());
-
-                if (GetLogicalAnswer(answerGroupOptionId))
+                if (!string.IsNullOrEmpty(rdbAnswerGroupOpt.SelectedValue.ToString())) 
                 {
-                    answerGroupOptionChild = true;
+                    if (GetLogicalAnswer(answerGroupOptionId))
+                    {
+                        answerGroupOptionChild = true;
+                    }
                 }
             }
             
+            // if the input type is TEXT BOX
+            else if (inputType == 19)
+            {
+                answerArray[indexAnswerArray] = new Answer();
+                answerArray[indexAnswerArray].answer_text = textAreaBox.Text;
+                answerArray[indexAnswerArray].answer_question_id = Int32.Parse(Session["current_question"].ToString());
+                answerArray[indexAnswerArray].answer_resp_id = 1;
+            }
+            
+            // if the input type is an email, telephone, text, url, or any type that is a string with multiple characters
+            else if(inputType == 3 || inputType == 8 || inputType == 13 || inputType == 15 || inputType == 17)
+            {
+                answerArray[indexAnswerArray] = new Answer();
+                answerArray[indexAnswerArray].answer_text = textBox.Text;
+                answerArray[indexAnswerArray].answer_question_id = Int32.Parse(Session["current_question"].ToString());
+                answerArray[indexAnswerArray].answer_resp_id = 1;                
+            }
 
+            // // if the input type is a NUMERIC TEXTBOX
+            else if (inputType == 10) 
+            {
+                answerArray[indexAnswerArray] = new Answer();
+                answerArray[indexAnswerArray].answer_numeric = string.IsNullOrEmpty(numberBox.Text.ToString()) ? 0 : Int32.Parse(numberBox.Text.ToString());
+                answerArray[indexAnswerArray].answer_question_id = Int32.Parse(Session["current_question"].ToString());
+                answerArray[indexAnswerArray].answer_resp_id = 1;
+            }
+            
+            // if the input type is DROPDOWNLIST
+            else if (inputType == 18)
+            {
+                answerArray[indexAnswerArray] = new Answer();
+                answerArray[indexAnswerArray].answer_group_option_id = string.IsNullOrEmpty(ddAnswerGroupOpt.SelectedValue.ToString()) ? 0 : Int32.Parse(ddAnswerGroupOpt.SelectedValue.ToString());
+                answerArray[indexAnswerArray].answer_question_id = Int32.Parse(Session["current_question"].ToString());
+                answerArray[indexAnswerArray].answer_resp_id = 1;
+                int answerGroupOptionId = int.Parse(answerArray[indexAnswerArray].answer_group_option_id.ToString());
+                indexAnswerArray++;
+                if (!string.IsNullOrEmpty(rdbAnswerGroupOpt.SelectedValue.ToString()))
+                {
+                    if (GetLogicalAnswer(answerGroupOptionId))
+                    {
+                        answerGroupOptionChild = true;
+                    }
+                }
+            }
+
+                        
+            // adding the values collected in the answer array to the session
             Session["answer_group_option_child"] = answerGroupOptionChild;
             Session["answer_array"] = answerArray;
             Session["array_answer_index"] = indexAnswerArray;
         }
 
+        // get the Index for adding the values for the answer array 
         public int GetIndexAnswerArray()
         {
             int indexAnswerArray;
@@ -507,6 +562,7 @@ namespace QuickSurveys
 
             return indexAnswerArray;
         }
+
         // check if the answer has a child question
         private bool GetLogicalAnswer(int answerGroupOptionChild)
         {
