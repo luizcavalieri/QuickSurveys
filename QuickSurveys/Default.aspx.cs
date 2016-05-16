@@ -52,7 +52,15 @@ namespace QuickSurveys
         {
             if (!IsPostBack)
             {
-                if (!string.IsNullOrEmpty(Session["survey_id"] as string))
+                bool checkLastQuestion = false;
+                
+                if (!string.IsNullOrEmpty(Session["checkLastQuestion"] as string))
+                {
+                    checkLastQuestion = bool.Parse(Session["checkLastQuestion"].ToString());                
+                }
+
+
+                if(!string.IsNullOrEmpty(Session["survey_id"] as string))
                 {
                     MultiViewMainPage.ActiveViewIndex = 1;
 
@@ -85,15 +93,8 @@ namespace QuickSurveys
                 int questSequence = Int32.Parse(Session["quest_survey_sequence"].ToString());
                 GetQuestion(surveyId, questSequence);
                 MultiViewMainPage.ActiveViewIndex = 1;
-
             }
             
-
-
-            Debug.Write(Session["survey_id"]);
-
-            
-
         }
 
         // show survey buttons
@@ -180,6 +181,7 @@ namespace QuickSurveys
 
                 int surveyTemp = Int32.Parse(Session["quest_survey_sequence"].ToString()) - 1;
                 Session["quest_survey_sequence"] = surveyTemp;
+
             }
             else
             {
@@ -203,6 +205,20 @@ namespace QuickSurveys
                 //get the sql script executing on the connection
                 myCommand = new SqlCommand(queryQuestionInputType, myConnection);
 
+                //open connection
+                myConnection.Open();
+
+                //open the reader
+                myReader = myCommand.ExecuteReader();
+
+                
+                // trying to redirect the page to the thank you page after finishing the survey
+                if (CheckLastQuest(myReader) == 0)
+                {
+                    MultiViewMainPage.ActiveViewIndex = 2;
+                }
+
+                myConnection.Close();
             }
 
             //open connection
@@ -210,13 +226,13 @@ namespace QuickSurveys
 
             //open the reader
             myReader = myCommand.ExecuteReader();
-            
 
             // populate the objects from the data in the database
             if (myReader.Read()) 
             {
                 int questSurveySequence = (myReader["quest_survey_sequence"] != DBNull.Value) ? Convert.ToInt32(myReader["quest_survey_sequence"]) : 0;
                 currentQuestion.quest_description = myReader["quest_description"].ToString();
+                
                 if (questSurveySequence != 0) 
                 { 
                     currentQuestion.quest_survey_sequence = questSurveySequence;
@@ -277,8 +293,7 @@ namespace QuickSurveys
                     ddAnswerGroupOpt.Visible = false;
                 }
 
-
-
+                
             }
 
             lblQuestionDesc.Text = currentQuestion.quest_description;
@@ -286,8 +301,19 @@ namespace QuickSurveys
             lblSurveyDesc.Text = currentSurvey.survey_description;
             lblSurveySession.Text = Session["survey_id"].ToString();
             //lblTestAnswerGroup.Text = currentQuestion.quest_answer_group_id.ToString();
+
         
         }
+
+        private int CheckLastQuest(SqlDataReader myReader)
+        {
+            DataTable dt = new DataTable();
+            dt.Load(myReader);
+            int countQuestions = dt.Rows.Count;
+
+            return countQuestions;
+        }
+
 
         // fill the checkboxes, radiobuttons and dropdown lists with the answer options.
         private void FillCheckBox(int answerGroupId, int inputType)
@@ -447,8 +473,8 @@ namespace QuickSurveys
             //GetQuestion(survId, survSequence);
         }
 
-        // getting the answer depending on the input type
-        // input types treated RadioButton, CheckBox, TextBox, DropDownList, NumericAnswer, 
+        /* getting the answer depending on the input type
+         input types treated RadioButton, CheckBox, TextBox, DropDownList, NumericAnswer, */
         public void GetAnswersByInputType(int indexAnswerArray, bool answerGroupOptionChild, Answer[] answerArray) 
         {
 

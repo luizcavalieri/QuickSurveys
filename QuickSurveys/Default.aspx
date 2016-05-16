@@ -74,6 +74,13 @@
             <%-- END QUESTIONS BLOCK --%>
 
             </asp:View>
+
+            <asp:View ID="ThankYouView" runat="server">
+                <div class="col-lg-5">
+                    <h1>Thank you!</h1>
+                </div>
+            
+            </asp:View>
         </asp:MultiView>
 
         
