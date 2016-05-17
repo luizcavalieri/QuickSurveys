@@ -85,6 +85,15 @@ namespace QuickSurveys {
         protected global::System.Web.UI.WebControls.Label lblQuestionDesc;
         
         /// <summary>
+        /// lblipAddress control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblipAddress;
+        
+        /// <summary>
         /// cbxAnswerGroupOpt control.
         /// </summary>
         /// <remarks>
@@ -137,6 +146,15 @@ namespace QuickSurveys {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox textBox;
+        
+        /// <summary>
+        /// btnBack control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnBack;
         
         /// <summary>
         /// btnSubmit control.

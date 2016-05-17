@@ -52,12 +52,12 @@ namespace QuickSurveys
         {
             if (!IsPostBack)
             {
-                bool checkLastQuestion = false;
+                //bool checkLastQuestion = false;
                 
-                if (!string.IsNullOrEmpty(Session["checkLastQuestion"] as string))
-                {
-                    checkLastQuestion = bool.Parse(Session["checkLastQuestion"].ToString());                
-                }
+                //if (!string.IsNullOrEmpty(Session["checkLastQuestion"] as string))
+                //{
+                //    checkLastQuestion = bool.Parse(Session["checkLastQuestion"].ToString());                
+                //}
 
 
                 if(!string.IsNullOrEmpty(Session["survey_id"] as string))
@@ -72,7 +72,8 @@ namespace QuickSurveys
                 else 
                 {
                     MultiViewMainPage.ActiveViewIndex = 0;
-
+                    Session["answer_group_option_child"] = false;
+                    Session["current_question"] = 0;
                     GetSurveyButtons();
                 }
 
@@ -87,6 +88,8 @@ namespace QuickSurveys
             Session["survey_id"] = btn.CommandArgument.ToString();
             Session["quest_survey_sequence"] = 1;
 
+            GetIPAddress();
+
             if (!string.IsNullOrEmpty(Session["survey_id"] as string))
             {
                 int surveyId = Int32.Parse(Session["survey_id"].ToString());
@@ -95,6 +98,24 @@ namespace QuickSurveys
                 MultiViewMainPage.ActiveViewIndex = 1;
             }
             
+        }
+
+        protected void GetIPAddress()
+        {
+            System.Web.HttpContext context = System.Web.HttpContext.Current;
+            string ipAddress = context.Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
+
+            //if (!string.IsNullOrEmpty(ipAddress))
+            //{
+            //    string[] addresses = ipAddress.Split(',');
+            //    if (addresses.Length != 0)
+            //    {
+            //        addresses[0];
+            //    }
+            //}
+
+            Session["user_ip_address"] = context.Request.ServerVariables["REMOTE_ADDR"];
+
         }
 
         // show survey buttons
@@ -145,6 +166,7 @@ namespace QuickSurveys
 
             // if current question is null it means that this is not the first question 
             //so the system can start the check if there is any answer that is flagged for child question.
+
             if (Session["current_question"] != null)
             {
                 previousQuest = Int32.Parse(Session["current_question"].ToString());
@@ -227,21 +249,29 @@ namespace QuickSurveys
             //open the reader
             myReader = myCommand.ExecuteReader();
 
-            // populate the objects from the data in the database
-            if (myReader.Read()) 
+            // populate the answer option objects from the database
+            PopulateMultiAnswer(myReader);
+
+        
+        }
+
+        // populate the objects from the data in the database
+        private void PopulateMultiAnswer(SqlDataReader myReader)
+        {
+            if (myReader.Read())
             {
                 int questSurveySequence = (myReader["quest_survey_sequence"] != DBNull.Value) ? Convert.ToInt32(myReader["quest_survey_sequence"]) : 0;
                 currentQuestion.quest_description = myReader["quest_description"].ToString();
-                
-                if (questSurveySequence != 0) 
-                { 
+
+                if (questSurveySequence != 0)
+                {
                     currentQuestion.quest_survey_sequence = questSurveySequence;
                 }
                 else
                 {
                     currentQuestion.quest_survey_sequence = Int32.Parse(myReader["quest_child_sequence"].ToString());
-                }  
- 
+                }
+
                 currentSurvey.survey_description = myReader["survey_description"].ToString();
                 currentQuestion.quest_answer_group_id = string.IsNullOrEmpty(myReader["quest_answer_group_id"].ToString()) ? 0 : int.Parse(myReader["quest_answer_group_id"].ToString());
                 currentQuestion.quest_input_type_id = Int32.Parse(myReader["quest_input_type_id"].ToString());
@@ -256,7 +286,7 @@ namespace QuickSurveys
                 {
                     FillCheckBox(answerGroupId, inputType);
                 }
-                else if(inputType == 10)
+                else if (inputType == 10)
                 {
                     numberBox.Visible = true;
                     textAreaBox.Visible = false;
@@ -293,7 +323,7 @@ namespace QuickSurveys
                     ddAnswerGroupOpt.Visible = false;
                 }
 
-                
+
             }
 
             lblQuestionDesc.Text = currentQuestion.quest_description;
@@ -301,8 +331,6 @@ namespace QuickSurveys
             lblSurveyDesc.Text = currentSurvey.survey_description;
             lblSurveySession.Text = Session["survey_id"].ToString();
             //lblTestAnswerGroup.Text = currentQuestion.quest_answer_group_id.ToString();
-
-        
         }
 
         private int CheckLastQuest(SqlDataReader myReader)
@@ -313,7 +341,6 @@ namespace QuickSurveys
 
             return countQuestions;
         }
-
 
         // fill the checkboxes, radiobuttons and dropdown lists with the answer options.
         private void FillCheckBox(int answerGroupId, int inputType)
@@ -458,7 +485,7 @@ namespace QuickSurveys
         {
             //Object to keep the current answers 
             Answer[] answerArray = new Answer[GetNumOfOptions()];
-
+           
             //increasing one to follow the sequence of questions in the survey.
             //in case this is a child question will increase as well, but will be decreased in the function 
             int surveyTemp = Int32.Parse(Session["quest_survey_sequence"].ToString()) + 1;
@@ -473,6 +500,8 @@ namespace QuickSurveys
             //GetQuestion(survId, survSequence);
         }
 
+
+
         /* getting the answer depending on the input type
          input types treated RadioButton, CheckBox, TextBox, DropDownList, NumericAnswer, */
         public void GetAnswersByInputType(int indexAnswerArray, bool answerGroupOptionChild, Answer[] answerArray) 
@@ -480,14 +509,21 @@ namespace QuickSurveys
 
             int inputType = Int32.Parse(Session["input_type"].ToString());
 
+            Answer[] answerArrayTemp = new Answer[GetNumOfOptions()];
+
+            answerArrayTemp = (Answer[])Session["answer_array"];
+
+
             // if the input type is CHECKBOX
             if (inputType == 1)
             {
+
                 foreach (ListItem myList in cbxAnswerGroupOpt.Items)
                 {
                     if (myList.Selected)
                     {
                         answerArray[indexAnswerArray] = new Answer();
+
                         answerArray[indexAnswerArray].answer_group_option_id = Int32.Parse(myList.Value.ToString());
                         answerArray[indexAnswerArray].answer_question_id = Int32.Parse(Session["current_question"].ToString());
                         answerArray[indexAnswerArray].answer_resp_id = 1;
@@ -630,6 +666,23 @@ namespace QuickSurveys
             {
                 return false;
             }
+        }
+
+        protected void PreviousQuestion_Click(object sender, EventArgs e)
+        {
+
+            if (bool.Parse(Session["answer_group_option_child"].ToString()))
+            {
+                Session["answer_group_option_child"] = false;
+            }
+            else
+            {
+                int surveyTemp = Int32.Parse(Session["quest_survey_sequence"].ToString()) - 1;
+                Session["quest_survey_sequence"] = surveyTemp;
+            }
+            
+
+            Response.Redirect("~/Default.aspx");
         }
     }
 }

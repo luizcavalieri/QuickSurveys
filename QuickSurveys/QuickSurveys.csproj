@@ -76,6 +76,7 @@
   <ItemGroup>
     <Compile Include="AppConstant.cs" />
     <Compile Include="BusinessLogic\Answer.cs" />
+    <Compile Include="BusinessLogic\Respondent.cs" />
     <Compile Include="BusinessLogic\SurveyData.cs" />
     <Compile Include="BusinessLogic\Survey.cs" />
     <Compile Include="BusinessLogic\User.cs" />

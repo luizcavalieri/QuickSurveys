@@ -38,7 +38,7 @@
                 <br /> <br />
                 <asp:Label ID="lblQuestSurveySequence" runat="server" Text="-" CssClass="h4"></asp:Label>
                 <asp:Label ID="lblQuestionDesc" runat="server" Text="-" CssClass="h4"></asp:Label>
-                <%--<asp:Label ID="lblInputType" runat="server" Text="-" ></asp:Label><br /> <br />--%>
+                <asp:Label ID="lblipAddress" runat="server" Text="-" ></asp:Label><br /> <br />
                 <%--<asp:Label ID="lblTestAnswerGroup" runat="server" Text="-" ></asp:Label><br /> <br />--%>
             
                 <div style="display:block;">
@@ -64,10 +64,14 @@
 
                     <asp:TextBox ID="textBox" runat="server" Visible="False" MaxLength="144" TextMode="SingleLine" CssClass="form-control"></asp:TextBox>
                 </div>
-                <br /> 
-                
-                <asp:Button ID="btnSubmit" runat="server" Text="Next Question >>" 
-                        CssClass="btn btn-success form-control" onclick="SaveAndNextQuest_Click"/>
+                <br />
+                <div class="col-xs-5 ">
+                    <asp:Button ID="btnBack" runat="server" Text="<< Previous" 
+                        CssClass="btn btn-danger form-control" onclick="PreviousQuestion_Click"/>
+                </div>
+                <div class="col-xs-7 ">
+                    <asp:Button ID="btnSubmit" runat="server" Text="Save and Next >>" CssClass="btn btn-success form-control" onclick="SaveAndNextQuest_Click"/>
+                </div>
             
             </div>
 
@@ -76,10 +80,31 @@
             </asp:View>
 
             <asp:View ID="ThankYouView" runat="server">
-                <div class="col-lg-5">
+                <div class="row">
                     <h1>Thank you!</h1>
+                    <%--<div class="col-xs-3 form-group">
+                        <asp:Label ID="lblFirstName" runat="server" Text="First Name" Font-Bold="True"></asp:Label>
+                        <asp:TextBox ID="tbxFirstName" runat="server" TextMode="SingleLine" CssClass="form-control"></asp:TextBox>
+                    </div>
+                    <div class="col-xs-3 form-group">
+                        <asp:Label ID="lblLastName" runat="server" Text="First Name" Font-Bold="True"></asp:Label>
+                        <asp:TextBox ID="tbxLastName" runat="server" TextMode="SingleLine" CssClass="form-control"></asp:TextBox>
+                    </div>
+                    <div class="col-xs-3 form-group">
+                        <asp:Label ID="Label1" runat="server" Text="First Name" Font-Bold="True"></asp:Label>
+                        <asp:TextBox ID="tbxDateOfBirth" runat="server" TextMode="Date" CssClass="form-control"></asp:TextBox>
+                    </div>
                 </div>
-            
+                <div class="row">
+                    <div class="col-xs-3 form-group">
+                        <label>Date of Birth</label>
+                        <input class="form-control" type="date"/>
+                    </div>
+                    <div class="col-xs-3 form-group">
+                        <label>Label4</label>
+                        <input class="form-control" type="text"/>
+                    </div>--%>
+                </div>
             </asp:View>
         </asp:MultiView>
 
