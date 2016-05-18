@@ -1,14 +1,15 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage.Master" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="QuickSurveys.Default" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <script type="text/javascript">
+        $(function () {
+            $(".date").datepicker();
+        });
+    </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <div class="container">
         <br />
         
-        
-        
-   
-
         <asp:MultiView ID="MultiViewMainPage" runat="server">
 
             <asp:View ID="SurveyBlockView" runat="server" EnableViewState="true" ViewStateMode="Enabled">
@@ -81,8 +82,10 @@
 
             <asp:View ID="ThankYouView" runat="server">
                 <div class="row">
-                    <h1>Thank you!</h1>
-                    <%--<div class="col-xs-3 form-group">
+                    <h3>Register</h3>
+                    <br />
+                    <h4 style="color: #999999">Personal Information</h4>
+                    <div class="col-xs-3 form-group">
                         <asp:Label ID="lblFirstName" runat="server" Text="First Name" Font-Bold="True"></asp:Label>
                         <asp:TextBox ID="tbxFirstName" runat="server" TextMode="SingleLine" CssClass="form-control"></asp:TextBox>
                     </div>
@@ -91,28 +94,30 @@
                         <asp:TextBox ID="tbxLastName" runat="server" TextMode="SingleLine" CssClass="form-control"></asp:TextBox>
                     </div>
                     <div class="col-xs-3 form-group">
-                        <asp:Label ID="Label1" runat="server" Text="First Name" Font-Bold="True"></asp:Label>
-                        <asp:TextBox ID="tbxDateOfBirth" runat="server" TextMode="Date" CssClass="form-control"></asp:TextBox>
+                        <asp:Label ID="Label1" runat="server" Text="Date of Birth" Font-Bold="True"></asp:Label>
+                        <asp:TextBox ID="tbxDateOfBirth" runat="server" TextMode="SingleLine" CssClass="form-control date"></asp:TextBox>
+                        <%--<input type="text" id="datepicker" class="form-control date" />--%>
                     </div>
                 </div>
                 <div class="row">
+                <h4 style="color: #999999">Contact</h4>
                     <div class="col-xs-3 form-group">
-                        <label>Date of Birth</label>
-                        <input class="form-control" type="date"/>
+                        <asp:Label ID="lblEmail" runat="server" Text="Email" Font-Bold="True" ></asp:Label>
+                        <asp:TextBox ID="txbEmail" runat="server" TextMode="Email" CssClass="form-control"></asp:TextBox>
                     </div>
                     <div class="col-xs-3 form-group">
-                        <label>Label4</label>
-                        <input class="form-control" type="text"/>
-                    </div>--%>
+                        <asp:Label ID="lblPhone" runat="server" Text="Phone" Font-Bold="True"></asp:Label>
+                        <asp:TextBox ID="tbxPhone" runat="server" TextMode="Phone" CssClass="form-control"></asp:TextBox>
+                    </div>
+                    <div class="col-xs-3 form-group">
+                        <%--<asp:Label ID="Label4" runat="server" Text="Date of Birth" Font-Bold="True"></asp:Label>
+                        <asp:TextBox ID="TextBox3" runat="server" TextMode="Date" CssClass="form-control"></asp:TextBox>--%>
+                    </div>
                 </div>
+                
             </asp:View>
         </asp:MultiView>
-
-        
-
-
-        
-
    
     </div>
+   
 </asp:Content>
