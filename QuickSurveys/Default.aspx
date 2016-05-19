@@ -82,39 +82,90 @@
 
             <asp:View ID="ThankYouView" runat="server">
                 <div class="row">
-                    <h3>Register</h3>
-                    <br />
-                    <h4 style="color: #999999">Personal Information</h4>
-                    <div class="col-xs-3 form-group">
-                        <asp:Label ID="lblFirstName" runat="server" Text="First Name" Font-Bold="True"></asp:Label>
-                        <asp:TextBox ID="tbxFirstName" runat="server" TextMode="SingleLine" CssClass="form-control"></asp:TextBox>
-                    </div>
-                    <div class="col-xs-3 form-group">
-                        <asp:Label ID="lblLastName" runat="server" Text="First Name" Font-Bold="True"></asp:Label>
-                        <asp:TextBox ID="tbxLastName" runat="server" TextMode="SingleLine" CssClass="form-control"></asp:TextBox>
-                    </div>
-                    <div class="col-xs-3 form-group">
-                        <asp:Label ID="Label1" runat="server" Text="Date of Birth" Font-Bold="True"></asp:Label>
-                        <asp:TextBox ID="tbxDateOfBirth" runat="server" TextMode="SingleLine" CssClass="form-control date"></asp:TextBox>
-                        <%--<input type="text" id="datepicker" class="form-control date" />--%>
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">Login</div>
+                        <div class="panel-body">
+                            <div class="col-xs-3 form-group">
+                                <asp:Label ID="lblUsername" runat="server" Text="Username" Font-Bold="True"></asp:Label>
+                                <asp:TextBox ID="tbxUserName" runat="server" TextMode="SingleLine" ToolTip="Username" CssClass="form-control"></asp:TextBox>
+                            </div>
+                            <div class="col-xs-3 form-group">
+                                <asp:Label ID="lblPassword" runat="server" Text="Password" Font-Bold="True"></asp:Label>
+                                <asp:TextBox ID="tbxPassword" runat="server" TextMode="Password" ToolTip="Password" CssClass="form-control"></asp:TextBox>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="row">
-                <h4 style="color: #999999">Contact</h4>
-                    <div class="col-xs-3 form-group">
-                        <asp:Label ID="lblEmail" runat="server" Text="Email" Font-Bold="True" ></asp:Label>
-                        <asp:TextBox ID="txbEmail" runat="server" TextMode="Email" CssClass="form-control"></asp:TextBox>
-                    </div>
-                    <div class="col-xs-3 form-group">
-                        <asp:Label ID="lblPhone" runat="server" Text="Phone" Font-Bold="True"></asp:Label>
-                        <asp:TextBox ID="tbxPhone" runat="server" TextMode="Phone" CssClass="form-control"></asp:TextBox>
-                    </div>
-                    <div class="col-xs-3 form-group">
-                        <%--<asp:Label ID="Label4" runat="server" Text="Date of Birth" Font-Bold="True"></asp:Label>
-                        <asp:TextBox ID="TextBox3" runat="server" TextMode="Date" CssClass="form-control"></asp:TextBox>--%>
+                     <div class="panel panel-primary">
+                        <div class="panel-heading">Registration</div>
+                        <div class="panel-body">
+                            <div class="row">
+                            <h4 style="color: #999999">Personal Information</h4>
+                            <div class="col-xs-3 form-group">
+                                <asp:Label ID="lblFirstName" runat="server" Text="First Name" Font-Bold="True"></asp:Label>
+                                <asp:TextBox ID="tbxFirstName" runat="server" TextMode="SingleLine" ToolTip="First Name" CssClass="form-control"></asp:TextBox>
+                            </div>
+                            <div class="col-xs-3 form-group">
+                                <asp:Label ID="lblLastName" runat="server" Text="Last Name" Font-Bold="True"></asp:Label>
+                                <asp:TextBox ID="tbxLastName" runat="server" TextMode="SingleLine" ToolTip="Last Name" CssClass="form-control"></asp:TextBox>
+                            </div>
+                            <div class="col-xs-3 form-group">
+                                <asp:Label ID="lblDateOfBirth" runat="server" Text="Date of Birth" Font-Bold="True"></asp:Label>
+                                <asp:TextBox ID="tbxDateOfBirth" runat="server" ToolTip="Your date of birth" TextMode="SingleLine" CssClass="form-control date"></asp:TextBox>
+                                <%--<input type="text" id="datepicker" class="form-control date" />--%>
+                            </div>
+                            </div>
+                            <div class="row">
+                            <h4 style="color: #999999">Contact</h4>
+                                <div class="col-xs-3 form-group">
+                                    <asp:Label ID="lblEmail" runat="server" Text="Email" Font-Bold="True" ></asp:Label>
+                                    <asp:TextBox ID="txbEmail" runat="server" TextMode="Email" ToolTip="Email Address" CssClass="form-control"></asp:TextBox>
+                                </div>
+                                <div class="col-xs-3 form-group">
+                                    <asp:Label ID="lblPhone" runat="server" Text="Phone" Font-Bold="True"></asp:Label>
+                                    <asp:TextBox ID="tbxPhone" runat="server" TextMode="Phone" ToolTip="Your preferred phone number" CssClass="form-control"></asp:TextBox>
+                                </div>
+                                <div class="col-xs-3 form-group">
+                                    <%--<asp:Label ID="Label4" runat="server" Text="Date of Birth" Font-Bold="True"></asp:Label>
+                                    <asp:TextBox ID="TextBox3" runat="server" TextMode="Date" CssClass="form-control"></asp:TextBox>--%>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-2">
+                                <h4 style="color: #999999">Address</h4>
+                                    <div class="col-xs-12 form-group">
+                                        <asp:Label ID="lblState" runat="server" Text="State" Font-Bold="True" ></asp:Label>
+                                        <asp:DropDownList ID="ddState" runat="server" ToolTip="State where you live" TextMode="SingleLine" CssClass="form-control">
+                                        <asp:ListItem> - </asp:ListItem>
+                                        </asp:DropDownList>
+                                    </div>
+                                </div>
+                                <div class="col-xs-5">
+                                    <h4 style="color: #999999">Home </h4>
+                                    <div class="col-xs-6 form-group">
+                                        <asp:Label ID="lblSuburbHome" runat="server" Text="Suburb" Font-Bold="True" ></asp:Label>
+                                        <asp:TextBox ID="tbxSuburbHome" runat="server" ToolTip="Suburb where you live" TextMode="SingleLine" CssClass="form-control"></asp:TextBox>
+                                    </div>
+                                    <div class="col-xs-6 form-group">
+                                        <asp:Label ID="lblPostCode" runat="server" Text="Post Code" Font-Bold="True" ></asp:Label>
+                                        <asp:TextBox ID="tbxPostCodeHome" runat="server" ToolTip="Post code where you live" TextMode="SingleLine" CssClass="form-control"></asp:TextBox>
+                                    </div>
+                                </div>
+                                <div class="col-xs-5">
+                                    <h4 style="color: #999999">Work </h4>
+                                    <div class="col-xs-6 form-group">
+                                        <asp:Label ID="lblSuburbWork" runat="server" Text="Suburb" Font-Bold="True" ></asp:Label>
+                                        <asp:TextBox ID="tbxSuburbWork" runat="server" TextMode="SingleLine" ToolTip="Suburb where you work" CssClass="form-control"></asp:TextBox>
+                                    </div>
+                                    <div class="col-xs-6 form-group">
+                                        <asp:Label ID="lblPostCodebWork" runat="server" Text="Post Code" Font-Bold="True" ></asp:Label>
+                                        <asp:TextBox ID="tbxPostCodeWork" runat="server" TextMode="SingleLine" ToolTip="Post code where you work" CssClass="form-control"></asp:TextBox>
+                                    </div>
+                                </div>
+                            </div>
                     </div>
                 </div>
-                
             </asp:View>
         </asp:MultiView>
    

@@ -59,6 +59,7 @@ namespace QuickSurveys
                 //    checkLastQuestion = bool.Parse(Session["checkLastQuestion"].ToString());                
                 //}
 
+                FillDropDownState();
 
                 if(!string.IsNullOrEmpty(Session["survey_id"] as string))
                 {
@@ -78,6 +79,39 @@ namespace QuickSurveys
                 }
 
             }
+
+        }
+
+        private void FillDropDownState()
+        {
+            connectString();
+
+            String queryAnswerGroupOption = @"SELECT answer_group_option_id, 
+                                                     answer_group_option_desc, 
+                                                     answer_group_id,
+                                                     answer_group_logical_answer 
+                                             FROM answer_group_option
+                                             where answer_group_id = 6
+                                             Order by answer_group_option_desc";
+
+            //get the sql script executing on the connection
+            myCommand = new SqlCommand(queryAnswerGroupOption, myConnection);
+
+            myConnection.Open();
+
+            
+            SqlDataReader readerChbx = myCommand.ExecuteReader();
+
+            while (readerChbx.Read())
+            {
+                ListItem item = new ListItem();
+                item.Text = readerChbx["answer_group_option_desc"].ToString();
+                item.Value = readerChbx["answer_group_option_id"].ToString();
+                ddAnswerGroupOpt.Visible = true;
+                ddState.Items.Add(item);
+            }
+
+            myConnection.Close();
 
         }
 
