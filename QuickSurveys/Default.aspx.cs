@@ -22,6 +22,7 @@ namespace QuickSurveys
         SqlCommand myCommand;
         Answer currentAnswer = new Answer();
         List<Answer[]> answerList = new List<Answer[]>();
+        int answerIndexArray;
         
 
         // open the connection with the database.
@@ -255,7 +256,7 @@ namespace QuickSurveys
                                              Join surveys srv 
                                              ON qt.quest_survey_id = srv.survey_id
                                              where quest_survey_id = " + surveyId + @" and 
-                                                   quest_survey_sequence = " +questSequence;
+                                             quest_survey_sequence = " +questSequence;
 
 
                 //get the sql script executing on the connection

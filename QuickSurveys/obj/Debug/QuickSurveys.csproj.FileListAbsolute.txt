@@ -7,3 +7,4 @@ C:\Users\luizc\Documents\QuickSurveys\QuickSurveys\bin\QuickSurveys.dll
 C:\Users\luizc\Documents\QuickSurveys\QuickSurveys\bin\QuickSurveys.pdb
 C:\Users\luizc\Documents\QuickSurveys\QuickSurveys\obj\Debug\QuickSurveys.dll
 C:\Users\luizc\Documents\QuickSurveys\QuickSurveys\obj\Debug\QuickSurveys.pdb
+C:\Users\luizc\Documents\QuickSurveys\QuickSurveys\obj\Debug\QuickSurveys.csprojResolveAssemblyReference.cache
