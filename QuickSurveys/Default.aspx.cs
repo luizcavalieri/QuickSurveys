@@ -18,11 +18,12 @@ namespace QuickSurveys
         Question currentQuestion = new Question();
         Survey currentSurvey = new Survey();
         Survey listSurvey = new Survey();
+        Respondent currentRespondent = new Respondent();
         SqlConnection myConnection;
         SqlCommand myCommand;
         Answer currentAnswer = new Answer();
         List<Answer[]> answerList = new List<Answer[]>();
-        int answerIndexArray;
+        //int answerIndexArray;
         
 
         // open the connection with the database.
@@ -53,23 +54,14 @@ namespace QuickSurveys
         {
             if (!IsPostBack)
             {
-                //bool checkLastQuestion = false;
-                
-                //if (!string.IsNullOrEmpty(Session["checkLastQuestion"] as string))
-                //{
-                //    checkLastQuestion = bool.Parse(Session["checkLastQuestion"].ToString());                
-                //}
-
-                FillDropDownState();
-
-                if(!string.IsNullOrEmpty(Session["survey_id"] as string))
+              
+                if (!string.IsNullOrEmpty(Session["survey_id"] as string))
                 {
-                    MultiViewMainPage.ActiveViewIndex = 1;
-
+                    MultiViewMainPage.ActiveViewIndex = 2;
                     int survSequence = Int32.Parse(Session["quest_survey_sequence"].ToString());
                     int survId = Int32.Parse(Session["survey_id"].ToString());
                     GetQuestion(survId, survSequence);
-                    //txtBoxArrayTest.Text = Session["survey_array"].ToString();
+                    
                 }
                 else 
                 {
@@ -116,6 +108,39 @@ namespace QuickSurveys
 
         }
 
+        private void FillDropDownGender()
+        {
+            connectString();
+
+            String queryAnswerGroupOption = @"SELECT answer_group_option_id, 
+                                                     answer_group_option_desc, 
+                                                     answer_group_id,
+                                                     answer_group_logical_answer 
+                                             FROM answer_group_option
+                                             where answer_group_id = 8
+                                             Order by answer_group_option_desc";
+
+            //get the sql script executing on the connection
+            myCommand = new SqlCommand(queryAnswerGroupOption, myConnection);
+
+            myConnection.Open();
+
+
+            SqlDataReader readerChbx = myCommand.ExecuteReader();
+
+            while (readerChbx.Read())
+            {
+                ListItem item = new ListItem();
+                item.Text = readerChbx["answer_group_option_desc"].ToString();
+                item.Value = readerChbx["answer_group_option_id"].ToString();
+                ddRespGender.Items.Add(item);
+                
+            }
+
+            myConnection.Close();
+
+        }
+
         // respondent chooses the survey that he wants to answer
         protected void SurveyButton_Click(Object sender, EventArgs e)
         {
@@ -127,29 +152,20 @@ namespace QuickSurveys
 
             if (!string.IsNullOrEmpty(Session["survey_id"] as string))
             {
-                int surveyId = Int32.Parse(Session["survey_id"].ToString());
-                int questSequence = Int32.Parse(Session["quest_survey_sequence"].ToString());
-                GetQuestion(surveyId, questSequence);
                 MultiViewMainPage.ActiveViewIndex = 1;
+                FillDropDownState();
+                FillDropDownGender();
+
             }
             
         }
 
-        protected void GetIPAddress()
+        protected string GetIPAddress()
         {
             System.Web.HttpContext context = System.Web.HttpContext.Current;
             string ipAddress = context.Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
 
-            //if (!string.IsNullOrEmpty(ipAddress))
-            //{
-            //    string[] addresses = ipAddress.Split(',');
-            //    if (addresses.Length != 0)
-            //    {
-            //        addresses[0];
-            //    }
-            //}
-
-            Session["user_ip_address"] = context.Request.ServerVariables["REMOTE_ADDR"];
+            return context.Request.ServerVariables["REMOTE_ADDR"];
 
         }
 
@@ -272,7 +288,7 @@ namespace QuickSurveys
                 // trying to redirect the page to the thank you page after finishing the survey
                 if (CheckLastQuest(myReader) == 0)
                 {
-                    MultiViewMainPage.ActiveViewIndex = 2;
+                    MultiViewMainPage.ActiveViewIndex = 3;
                 }
 
                 myConnection.Close();
@@ -718,6 +734,51 @@ namespace QuickSurveys
             
 
             Response.Redirect("~/Default.aspx");
+        }
+
+        protected void SkipRegistration_click(object sender, EventArgs e)
+        {
+            connectString();
+            
+            string ipAddres = GetIPAddress();
+            int surveyId = Int32.Parse(Session["survey_id"].ToString());
+
+            String insertAnonymousResp = @"insert into respondents ( resp_gender,    
+                                                                     resp_age_range,    
+                                                                     resp_state_territory,    
+                                                                     resp_email,
+                                                                     resp_home_suburb,    
+                                                                     res_home_post_code,    
+                                                                     resp_work_post_code,    
+                                                                     resp_work_suburb,      
+                                                                     resp_IP,    
+                                                                     resp_user_id,    
+                                                                     resp_survey_id)   
+                                            output inserted.resp_id values ('', '', '', 'anonymous@anonymous.com', '', 0, 0, '', '" + ipAddres + "', 5, " + surveyId  + ");";
+
+            
+            //get the sql script executing on the connection
+            myCommand = new SqlCommand(insertAnonymousResp, myConnection);
+
+            //open connectio
+            myConnection.Open();
+
+            int? modified = (int?)myCommand.ExecuteScalar();
+
+            if (myConnection.State == System.Data.ConnectionState.Open)
+                myConnection.Close();
+
+            Session["respondent_id"] = modified;
+
+            if (!string.IsNullOrEmpty(Session["survey_id"] as string))
+            {
+                //surveyId = Int32.Parse(Session["survey_id"].ToString());
+                int questSequence = Int32.Parse(Session["quest_survey_sequence"].ToString());
+                GetQuestion(surveyId, questSequence);
+                MultiViewMainPage.ActiveViewIndex = 2;
+            }
+
+
         }
     }
 }
