@@ -145,9 +145,9 @@ namespace QuickSurveys
         protected void SurveyButton_Click(Object sender, EventArgs e)
         {
             Button btn = (Button)sender;
+            
             Session["survey_id"] = btn.CommandArgument.ToString();
             Session["quest_survey_sequence"] = 1;
-
             GetIPAddress();
 
             if (!string.IsNullOrEmpty(Session["survey_id"] as string))
@@ -208,6 +208,15 @@ namespace QuickSurveys
         // show questions by the survey and sequence
         private void GetQuestion(int surveyId, int questSequence)
         {
+            //hidding the back button in case this is the first question.
+            if (questSequence == 1)
+            {
+                btnBack.Visible = false;
+            }
+            else
+            {
+                btnBack.Visible = true;
+            }
 
             int? previousQuest;
             bool answerGroupChildFlag;
@@ -551,16 +560,100 @@ namespace QuickSurveys
             //GetQuestion(survId, survSequence);
         }
 
+        // function for inserting values in the database that are with multiple values
+        protected void InserMultipleAnswerQuestion(int? answer_option_group_id, int answer_quest_id, int answer_resp_id)
+        {
+            if (answer_option_group_id != 0)
+            {
+                connectString();
 
+                String insertMultipleAnswerQuestion = @"insert into answers (  answer_resp_id,    
+                                                                  answer_question_id,
+                                                                  answer_group_option_id )   
+                                                output inserted.answer_id values (" + answer_resp_id + ", " + answer_quest_id + ", " + answer_option_group_id + ");";
+
+
+                //get the sql script executing on the connection
+                myCommand = new SqlCommand(insertMultipleAnswerQuestion, myConnection);
+
+                //open connectio
+                myConnection.Open();
+
+                int? modified = (int?)myCommand.ExecuteScalar();
+
+                if (myConnection.State == System.Data.ConnectionState.Open)
+                    myConnection.Close();
+
+                int? checkIfInsert = modified;
+            }
+         
+        }
+
+        protected void InsertNumericAnswer(int? answer_numeric, int answer_quest_id, int answer_resp_id)
+        {
+            if (answer_numeric != null)
+            {
+                connectString();
+
+                String insertMultipleAnswerQuestion = @"insert into answers (  answer_resp_id,    
+                                                                  answer_question_id,
+                                                                  answer_numeric )   
+                                                output inserted.answer_id values (" + answer_resp_id + ", " + answer_quest_id + ", " + answer_numeric + ");";
+
+
+                //get the sql script executing on the connection
+                myCommand = new SqlCommand(insertMultipleAnswerQuestion, myConnection);
+
+                //open connectio
+                myConnection.Open();
+
+                int? modified = (int?)myCommand.ExecuteScalar();
+
+                if (myConnection.State == System.Data.ConnectionState.Open)
+                    myConnection.Close();
+
+                int? checkIfInsert = modified;
+            }
+
+        }
+
+        protected void InsertTextAnswer(string answer_text, int answer_quest_id, int answer_resp_id)
+        {
+            if (answer_text != "")
+            {
+                connectString();
+
+                String insertMultipleAnswerQuestion = @"insert into answers (  answer_resp_id,    
+                                                                  answer_question_id,
+                                                                  answer_text )   
+                                                output inserted.answer_id values (" + answer_resp_id + ", " + answer_quest_id + ", " + answer_text + ");";
+
+
+                //get the sql script executing on the connection
+                myCommand = new SqlCommand(insertMultipleAnswerQuestion, myConnection);
+
+                //open connectio
+                myConnection.Open();
+
+                //int? modified = (int?)myCommand.ExecuteScalar();
+
+                if (myConnection.State == System.Data.ConnectionState.Open)
+                    myConnection.Close();
+
+                //int? checkIfInsert = modified;
+            }
+
+        }
 
         /* getting the answer depending on the input type
          input types treated RadioButton, CheckBox, TextBox, DropDownList, NumericAnswer, */
         public void GetAnswersByInputType(int indexAnswerArray, bool answerGroupOptionChild, Answer[] answerArray) 
         {
-
+            
             int inputType = Int32.Parse(Session["input_type"].ToString());
 
             Answer[] answerArrayTemp = new Answer[GetNumOfOptions()];
+            Answer insertAnswer = new Answer();
 
             answerArrayTemp = (Answer[])Session["answer_array"];
 
@@ -575,10 +668,13 @@ namespace QuickSurveys
                     {
                         answerArray[indexAnswerArray] = new Answer();
 
-                        answerArray[indexAnswerArray].answer_group_option_id = Int32.Parse(myList.Value.ToString());
-                        answerArray[indexAnswerArray].answer_question_id = Int32.Parse(Session["current_question"].ToString());
-                        answerArray[indexAnswerArray].answer_resp_id = 1;
-                        indexAnswerArray++;
+                        insertAnswer.answer_group_option_id = Int32.Parse(myList.Value.ToString());
+                        insertAnswer.answer_question_id = Int32.Parse(Session["current_question"].ToString());
+                        insertAnswer.answer_resp_id = Int32.Parse(Session["respondent_id"].ToString());
+                        //indexAnswerArray++;
+                        
+                        InserMultipleAnswerQuestion(Int32.Parse(insertAnswer.answer_group_option_id.ToString()), Int32.Parse(insertAnswer.answer_question_id.ToString()), Int32.Parse(insertAnswer.answer_resp_id.ToString()));
+                        
                         int answerGroupOptionId = Int32.Parse(myList.Value.ToString());
 
                         if (GetLogicalAnswer(answerGroupOptionId))
@@ -592,11 +688,15 @@ namespace QuickSurveys
             // if the input type is RADIOBUTTON
             else if (inputType == 2)
             {
-                answerArray[indexAnswerArray] = new Answer();
-                answerArray[indexAnswerArray].answer_group_option_id = string.IsNullOrEmpty(rdbAnswerGroupOpt.SelectedValue.ToString()) ? 0 : int.Parse(rdbAnswerGroupOpt.SelectedValue.ToString());
-                answerArray[indexAnswerArray].answer_question_id = Int32.Parse(Session["current_question"].ToString());
-                answerArray[indexAnswerArray].answer_resp_id = 1;
-                int answerGroupOptionId = int.Parse(answerArray[indexAnswerArray].answer_group_option_id.ToString());
+                insertAnswer = new Answer();
+                insertAnswer.answer_group_option_id = string.IsNullOrEmpty(rdbAnswerGroupOpt.SelectedValue.ToString()) ? 0 : int.Parse(rdbAnswerGroupOpt.SelectedValue.ToString());
+                insertAnswer.answer_question_id = Int32.Parse(Session["current_question"].ToString());
+                insertAnswer.answer_resp_id = Int32.Parse(Session["respondent_id"].ToString());
+
+                int? answerGroupOptionId = int.Parse(insertAnswer.answer_group_option_id.ToString());
+
+                InserMultipleAnswerQuestion(answerGroupOptionId, Int32.Parse(insertAnswer.answer_question_id.ToString()), Int32.Parse(insertAnswer.answer_resp_id.ToString()));
+
                 indexAnswerArray++;
                 if (!string.IsNullOrEmpty(rdbAnswerGroupOpt.SelectedValue.ToString())) 
                 {
@@ -610,38 +710,44 @@ namespace QuickSurveys
             // if the input type is TEXT BOX
             else if (inputType == 19)
             {
-                answerArray[indexAnswerArray] = new Answer();
-                answerArray[indexAnswerArray].answer_text = textAreaBox.Text;
-                answerArray[indexAnswerArray].answer_question_id = Int32.Parse(Session["current_question"].ToString());
-                answerArray[indexAnswerArray].answer_resp_id = 1;
+                insertAnswer = new Answer();
+                insertAnswer.answer_text = textAreaBox.Text;
+                insertAnswer.answer_question_id = Int32.Parse(Session["current_question"].ToString());
+                insertAnswer.answer_resp_id = Int32.Parse(Session["respondent_id"].ToString());
+                InsertTextAnswer(insertAnswer.answer_text, insertAnswer.answer_question_id, insertAnswer.answer_resp_id);
             }
             
             // if the input type is an email, telephone, text, url, or any type that is a string with multiple characters
             else if(inputType == 3 || inputType == 8 || inputType == 13 || inputType == 15 || inputType == 17)
             {
-                answerArray[indexAnswerArray] = new Answer();
-                answerArray[indexAnswerArray].answer_text = textBox.Text;
-                answerArray[indexAnswerArray].answer_question_id = Int32.Parse(Session["current_question"].ToString());
-                answerArray[indexAnswerArray].answer_resp_id = 1;                
+                insertAnswer = new Answer();
+                insertAnswer.answer_text = textBox.Text;
+                insertAnswer.answer_question_id = Int32.Parse(Session["current_question"].ToString());
+                insertAnswer.answer_resp_id = Int32.Parse(Session["respondent_id"].ToString());
+                InsertTextAnswer(insertAnswer.answer_text, insertAnswer.answer_question_id, insertAnswer.answer_resp_id);
             }
 
             // // if the input type is a NUMERIC TEXTBOX
             else if (inputType == 10) 
             {
-                answerArray[indexAnswerArray] = new Answer();
-                answerArray[indexAnswerArray].answer_numeric = string.IsNullOrEmpty(numberBox.Text.ToString()) ? 0 : Int32.Parse(numberBox.Text.ToString());
-                answerArray[indexAnswerArray].answer_question_id = Int32.Parse(Session["current_question"].ToString());
-                answerArray[indexAnswerArray].answer_resp_id = 1;
+                insertAnswer = new Answer();
+                insertAnswer.answer_numeric = string.IsNullOrEmpty(numberBox.Text.ToString()) ? 0 : Int32.Parse(numberBox.Text.ToString());
+                insertAnswer.answer_question_id = Int32.Parse(Session["current_question"].ToString());
+                insertAnswer.answer_resp_id = Int32.Parse(Session["respondent_id"].ToString());
+                InsertNumericAnswer(insertAnswer.answer_numeric, insertAnswer.answer_question_id, insertAnswer.answer_resp_id);
             }
             
             // if the input type is DROPDOWNLIST
             else if (inputType == 18)
             {
-                answerArray[indexAnswerArray] = new Answer();
-                answerArray[indexAnswerArray].answer_group_option_id = string.IsNullOrEmpty(ddAnswerGroupOpt.SelectedValue.ToString()) ? 0 : Int32.Parse(ddAnswerGroupOpt.SelectedValue.ToString());
-                answerArray[indexAnswerArray].answer_question_id = Int32.Parse(Session["current_question"].ToString());
-                answerArray[indexAnswerArray].answer_resp_id = 1;
-                int answerGroupOptionId = int.Parse(answerArray[indexAnswerArray].answer_group_option_id.ToString());
+                insertAnswer = new Answer();
+                insertAnswer.answer_group_option_id = string.IsNullOrEmpty(ddAnswerGroupOpt.SelectedValue.ToString()) ? 0 : Int32.Parse(ddAnswerGroupOpt.SelectedValue.ToString());
+                insertAnswer.answer_question_id = Int32.Parse(Session["current_question"].ToString());
+                insertAnswer.answer_resp_id = Int32.Parse(Session["respondent_id"].ToString());
+                int? answerGroupOptionId = int.Parse(insertAnswer.answer_group_option_id.ToString());
+                
+                InserMultipleAnswerQuestion(answerGroupOptionId, Int32.Parse(insertAnswer.answer_question_id.ToString()), Int32.Parse(insertAnswer.answer_resp_id.ToString()));
+                
                 indexAnswerArray++;
                 if (!string.IsNullOrEmpty(rdbAnswerGroupOpt.SelectedValue.ToString()))
                 {
@@ -655,8 +761,8 @@ namespace QuickSurveys
                         
             // adding the values collected in the answer array to the session
             Session["answer_group_option_child"] = answerGroupOptionChild;
-            Session["answer_array"] = answerArray;
             Session["array_answer_index"] = indexAnswerArray;
+            //Session["answer_array"] = answerArray;
         }
 
         // get the Index for adding the values for the answer array 
@@ -677,7 +783,7 @@ namespace QuickSurveys
         }
 
         // check if the answer has a child question
-        private bool GetLogicalAnswer(int answerGroupOptionChild)
+        private bool GetLogicalAnswer(int? answerGroupOptionChild)
         {
             
             connectString();
@@ -719,6 +825,61 @@ namespace QuickSurveys
             }
         }
 
+        //Skiping the registration from the respondent
+        protected void SkipRegistration_click(object sender, EventArgs e)
+        {
+            Session["answer_group_option_child"] = false;
+            if (!string.IsNullOrEmpty(Session["survey_id"] as string))
+            {
+            
+                connectString();
+            
+                string ipAddres = GetIPAddress();
+                int surveyId = Int32.Parse(Session["survey_id"].ToString());
+
+                String insertAnonymousResp = @"insert into respondents ( resp_gender,    
+                                                                         resp_age_range,    
+                                                                         resp_state_territory,    
+                                                                         resp_email,
+                                                                         resp_home_suburb,    
+                                                                         res_home_post_code,    
+                                                                         resp_work_post_code,    
+                                                                         resp_work_suburb,      
+                                                                         resp_IP,    
+                                                                         resp_user_id,
+                                                                         resp_date,    
+                                                                         resp_survey_id)   
+                                                output inserted.resp_id values ('', '', '', 'anonymous@anonymous.com', '', 0, 0, '', '" + ipAddres + "', 5, getdate(), " + surveyId  + ");";
+
+            
+                //get the sql script executing on the connection
+                myCommand = new SqlCommand(insertAnonymousResp, myConnection);
+
+                //open connectio
+                myConnection.Open();
+
+                int? modified = (int?)myCommand.ExecuteScalar();
+
+                if (myConnection.State == System.Data.ConnectionState.Open)
+                    myConnection.Close();
+
+                Session["respondent_id"] = modified;
+
+            
+                //surveyId = Int32.Parse(Session["survey_id"].ToString());
+                int questSequence = Int32.Parse(Session["quest_survey_sequence"].ToString());
+                GetQuestion(surveyId, questSequence);
+                MultiViewMainPage.ActiveViewIndex = 2;
+            }
+            else
+            {
+                MultiViewMainPage.ActiveViewIndex = 0;
+            }
+
+
+        }
+
+        //Go back previous question COMMENTED
         protected void PreviousQuestion_Click(object sender, EventArgs e)
         {
 
@@ -731,54 +892,11 @@ namespace QuickSurveys
                 int surveyTemp = Int32.Parse(Session["quest_survey_sequence"].ToString()) - 1;
                 Session["quest_survey_sequence"] = surveyTemp;
             }
-            
+
 
             Response.Redirect("~/Default.aspx");
         }
 
-        protected void SkipRegistration_click(object sender, EventArgs e)
-        {
-            connectString();
-            
-            string ipAddres = GetIPAddress();
-            int surveyId = Int32.Parse(Session["survey_id"].ToString());
-
-            String insertAnonymousResp = @"insert into respondents ( resp_gender,    
-                                                                     resp_age_range,    
-                                                                     resp_state_territory,    
-                                                                     resp_email,
-                                                                     resp_home_suburb,    
-                                                                     res_home_post_code,    
-                                                                     resp_work_post_code,    
-                                                                     resp_work_suburb,      
-                                                                     resp_IP,    
-                                                                     resp_user_id,    
-                                                                     resp_survey_id)   
-                                            output inserted.resp_id values ('', '', '', 'anonymous@anonymous.com', '', 0, 0, '', '" + ipAddres + "', 5, " + surveyId  + ");";
-
-            
-            //get the sql script executing on the connection
-            myCommand = new SqlCommand(insertAnonymousResp, myConnection);
-
-            //open connectio
-            myConnection.Open();
-
-            int? modified = (int?)myCommand.ExecuteScalar();
-
-            if (myConnection.State == System.Data.ConnectionState.Open)
-                myConnection.Close();
-
-            Session["respondent_id"] = modified;
-
-            if (!string.IsNullOrEmpty(Session["survey_id"] as string))
-            {
-                //surveyId = Int32.Parse(Session["survey_id"].ToString());
-                int questSequence = Int32.Parse(Session["quest_survey_sequence"].ToString());
-                GetQuestion(surveyId, questSequence);
-                MultiViewMainPage.ActiveViewIndex = 2;
-            }
-
-
-        }
+         
     }
 }

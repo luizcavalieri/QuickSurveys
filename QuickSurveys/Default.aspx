@@ -110,7 +110,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-xs-12 form-group" style="margin-left:15px;" >
-                                    <asp:Button ID="btnRegister" runat="server" Text="Register" CssClass="btn btn-success" Width="160px" />
+                                    <asp:Button ID="btnRegister" runat="server" Text="Register" CssClass="btn btn-success" Width="160px" Enabled="False" />
                                     <asp:Button ID="btnSkipRegistration" runat="server" Text="Skip Registration >>" 
                                         CssClass="btn btn-warning" Width="180px" onclick="SkipRegistration_click" />
                                 </div>
@@ -132,7 +132,7 @@
                             <div class="col-xs-3 form-group">
                                 <br />
                                 <asp:Button ID="btnLoginRespondent" runat="server" Text="Login" 
-                                    CssClass="btn btn-success " Width="134px" />
+                                    CssClass="btn btn-success " Width="134px" Enabled="False" />
                             </div>
                         </div>
                     </div>
@@ -178,7 +178,7 @@
                 </div>
                 <br />
                 <div class="col-xs-5 ">
-                    <asp:Button ID="btnBack" runat="server" Text="<< Previous" CssClass="btn btn-danger form-control" onclick="PreviousQuestion_Click"/>
+                    <asp:Button ID="btnBack" runat="server" Text="<< Previous" CssClass="btn btn-danger form-control" onclick="PreviousQuestion_Click" Enabled="False" />
                 </div>
                 <div class="col-xs-7 ">
                     <asp:Button ID="btnSubmit" runat="server" Text="Save and Next >>" CssClass="btn btn-success form-control" onclick="SaveAndNextQuest_Click"/>
