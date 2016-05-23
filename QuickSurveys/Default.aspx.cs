@@ -623,14 +623,14 @@ namespace QuickSurveys
             {
                 connectString();
 
-                String insertMultipleAnswerQuestion = @"insert into answers (  answer_resp_id,    
+                String insertTextAnswer = @"insert into answers (  answer_resp_id,    
                                                                   answer_question_id,
                                                                   answer_text )   
-                                                output inserted.answer_id values (" + answer_resp_id + ", " + answer_quest_id + ", " + answer_text + ");";
+                                                output inserted.answer_id values (" + answer_resp_id + ", " + answer_quest_id + ", '" + answer_text + "');";
 
 
                 //get the sql script executing on the connection
-                myCommand = new SqlCommand(insertMultipleAnswerQuestion, myConnection);
+                myCommand = new SqlCommand(insertTextAnswer, myConnection);
 
                 //open connectio
                 myConnection.Open();
