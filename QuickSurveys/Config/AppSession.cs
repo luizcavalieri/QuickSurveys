@@ -22,5 +22,23 @@ namespace QuickSurveys.Config
                 }
             }
         }
+
+        public static List<Answer> AnswerList
+        {
+            set { HttpContext.Current.Session["answerlist"] = value; }
+            get
+            {
+                return HttpContext.Current.Session["answerlist"] as List<Answer>;
+            }
+        }
+
+        public static int? IndexAnswer
+        {
+            set { HttpContext.Current.Session["indexAnswer"] = value;  }
+            get
+            {
+                return HttpContext.Current.Session["indexAnswer"] as int?;
+            }
+        }
     }
 }

@@ -763,6 +763,7 @@ namespace QuickSurveys
             Session["answer_group_option_child"] = answerGroupOptionChild;
             Session["array_answer_index"] = indexAnswerArray;
             //Session["answer_array"] = answerArray;
+            
         }
 
         // get the Index for adding the values for the answer array 
