@@ -24,7 +24,7 @@ namespace QuickSurveys
         Answer currentAnswer = new Answer();
         List<Answer[]> answerList = new List<Answer[]>();
         //int answerIndexArray;
-        AppSession AppSession = new AppSession();
+        AppSession appSession = new AppSession();
 
 
         // open the connection with the database.
@@ -651,13 +651,14 @@ namespace QuickSurveys
         public void GetAnswersByInputType(int indexAnswerArray, bool answerGroupOptionChild, Answer[] answerArray) 
         {
             int inputType = Int32.Parse(Session["input_type"].ToString());
-
             Answer insertAnswer = new Answer();
 
-            AppSession.AnswerList = new List<Answer>();
-            AppSession.IndexAnswer = new int();
-
-
+            if (AppSession.AnswerList == null)
+            {
+                AppSession.AnswerList = new List<Answer>();
+                AppSession.IndexAnswer = new int();
+            }
+            
             // if the input type is CHECKBOX
             if (inputType == 1)
             {
@@ -666,18 +667,14 @@ namespace QuickSurveys
                 {
                     if (myList.Selected)
                     {
-                        answerArray[indexAnswerArray] = new Answer();
-
-                        answerArray[indexAnswerArray].answer_group_option_id = Int32.Parse(myList.Value.ToString());
-                        answerArray[indexAnswerArray].answer_question_id = Int32.Parse(Session["current_question"].ToString());
-                        answerArray[indexAnswerArray].answer_resp_id = Int32.Parse(Session["respondent_id"].ToString());
-                        //indexAnswerArray++;
+                        insertAnswer.answer_group_option_id = Int32.Parse(myList.Value.ToString());
+                        insertAnswer.answer_question_id = Int32.Parse(Session["current_question"].ToString());
+                        insertAnswer.answer_resp_id = Int32.Parse(Session["respondent_id"].ToString());
                         AppSession.IndexAnswer++;
 
-                        int indexAnswerList = Int32.Parse(AppSession.IndexAnswer.ToString());
+                        //int indexAnswerList = Int32.Parse(AppSession.IndexAnswer.ToString());
 
-
-                        AppSession.AnswerList.Add(answerArray[indexAnswerList]);
+                        AppSession.AnswerList.Add(insertAnswer);
                         //InserMultipleAnswerQuestion(Int32.Parse(insertAnswer.answer_group_option_id.ToString()), Int32.Parse(insertAnswer.answer_question_id.ToString()), Int32.Parse(insertAnswer.answer_resp_id.ToString()));
                         
                         int answerGroupOptionId = Int32.Parse(myList.Value.ToString());
@@ -700,7 +697,7 @@ namespace QuickSurveys
 
                 int? answerGroupOptionId = int.Parse(insertAnswer.answer_group_option_id.ToString());
 
-                InserMultipleAnswerQuestion(answerGroupOptionId, Int32.Parse(insertAnswer.answer_question_id.ToString()), Int32.Parse(insertAnswer.answer_resp_id.ToString()));
+                //InserMultipleAnswerQuestion(answerGroupOptionId, Int32.Parse(insertAnswer.answer_question_id.ToString()), Int32.Parse(insertAnswer.answer_resp_id.ToString()));
 
                 indexAnswerArray++;
                 if (!string.IsNullOrEmpty(rdbAnswerGroupOpt.SelectedValue.ToString())) 
@@ -719,7 +716,7 @@ namespace QuickSurveys
                 insertAnswer.answer_text = textAreaBox.Text;
                 insertAnswer.answer_question_id = Int32.Parse(Session["current_question"].ToString());
                 insertAnswer.answer_resp_id = Int32.Parse(Session["respondent_id"].ToString());
-                InsertTextAnswer(insertAnswer.answer_text, insertAnswer.answer_question_id, insertAnswer.answer_resp_id);
+               // InsertTextAnswer(insertAnswer.answer_text, insertAnswer.answer_question_id, insertAnswer.answer_resp_id);
             }
             
             // if the input type is an email, telephone, text, url, or any type that is a string with multiple characters
@@ -729,7 +726,7 @@ namespace QuickSurveys
                 insertAnswer.answer_text = textBox.Text;
                 insertAnswer.answer_question_id = Int32.Parse(Session["current_question"].ToString());
                 insertAnswer.answer_resp_id = Int32.Parse(Session["respondent_id"].ToString());
-                InsertTextAnswer(insertAnswer.answer_text, insertAnswer.answer_question_id, insertAnswer.answer_resp_id);
+               // InsertTextAnswer(insertAnswer.answer_text, insertAnswer.answer_question_id, insertAnswer.answer_resp_id);
             }
 
             // // if the input type is a NUMERIC TEXTBOX
@@ -739,20 +736,21 @@ namespace QuickSurveys
                 insertAnswer.answer_numeric = string.IsNullOrEmpty(numberBox.Text.ToString()) ? 0 : Int32.Parse(numberBox.Text.ToString());
                 insertAnswer.answer_question_id = Int32.Parse(Session["current_question"].ToString());
                 insertAnswer.answer_resp_id = Int32.Parse(Session["respondent_id"].ToString());
-                InsertNumericAnswer(insertAnswer.answer_numeric, insertAnswer.answer_question_id, insertAnswer.answer_resp_id);
+               // InsertNumericAnswer(insertAnswer.answer_numeric, insertAnswer.answer_question_id, insertAnswer.answer_resp_id);
             }
             
             // if the input type is DROPDOWNLIST
             else if (inputType == 18)
             {
-                insertAnswer = new Answer();
+               
                 insertAnswer.answer_group_option_id = string.IsNullOrEmpty(ddAnswerGroupOpt.SelectedValue.ToString()) ? 0 : Int32.Parse(ddAnswerGroupOpt.SelectedValue.ToString());
                 insertAnswer.answer_question_id = Int32.Parse(Session["current_question"].ToString());
                 insertAnswer.answer_resp_id = Int32.Parse(Session["respondent_id"].ToString());
                 int? answerGroupOptionId = int.Parse(insertAnswer.answer_group_option_id.ToString());
                 
-                InserMultipleAnswerQuestion(answerGroupOptionId, Int32.Parse(insertAnswer.answer_question_id.ToString()), Int32.Parse(insertAnswer.answer_resp_id.ToString()));
+              //  InserMultipleAnswerQuestion(answerGroupOptionId, Int32.Parse(insertAnswer.answer_question_id.ToString()), Int32.Parse(insertAnswer.answer_resp_id.ToString()));
                 
+                // check if the question has a child
                 indexAnswerArray++;
                 if (!string.IsNullOrEmpty(rdbAnswerGroupOpt.SelectedValue.ToString()))
                 {
@@ -766,7 +764,7 @@ namespace QuickSurveys
                         
             // adding the values collected in the answer array to the session
             Session["answer_group_option_child"] = answerGroupOptionChild;
-            Session["array_answer_index"] = indexAnswerArray;
+            //Session["array_answer_index"] = indexAnswerArray;
             //Session["answer_array"] = answerArray;
             
         }
