@@ -24,7 +24,8 @@ namespace QuickSurveys
         Answer currentAnswer = new Answer();
         List<Answer[]> answerList = new List<Answer[]>();
         //int answerIndexArray;
-        
+        AppSession AppSession = new AppSession();
+
 
         // open the connection with the database.
         public void connectString()
@@ -649,13 +650,12 @@ namespace QuickSurveys
          input types treated RadioButton, CheckBox, TextBox, DropDownList, NumericAnswer, */
         public void GetAnswersByInputType(int indexAnswerArray, bool answerGroupOptionChild, Answer[] answerArray) 
         {
-            
             int inputType = Int32.Parse(Session["input_type"].ToString());
 
-            Answer[] answerArrayTemp = new Answer[GetNumOfOptions()];
             Answer insertAnswer = new Answer();
 
-            answerArrayTemp = (Answer[])Session["answer_array"];
+            AppSession.AnswerList = new List<Answer>();
+            AppSession.IndexAnswer = new int();
 
 
             // if the input type is CHECKBOX
@@ -668,12 +668,17 @@ namespace QuickSurveys
                     {
                         answerArray[indexAnswerArray] = new Answer();
 
-                        insertAnswer.answer_group_option_id = Int32.Parse(myList.Value.ToString());
-                        insertAnswer.answer_question_id = Int32.Parse(Session["current_question"].ToString());
-                        insertAnswer.answer_resp_id = Int32.Parse(Session["respondent_id"].ToString());
+                        answerArray[indexAnswerArray].answer_group_option_id = Int32.Parse(myList.Value.ToString());
+                        answerArray[indexAnswerArray].answer_question_id = Int32.Parse(Session["current_question"].ToString());
+                        answerArray[indexAnswerArray].answer_resp_id = Int32.Parse(Session["respondent_id"].ToString());
                         //indexAnswerArray++;
-                        
-                        InserMultipleAnswerQuestion(Int32.Parse(insertAnswer.answer_group_option_id.ToString()), Int32.Parse(insertAnswer.answer_question_id.ToString()), Int32.Parse(insertAnswer.answer_resp_id.ToString()));
+                        AppSession.IndexAnswer++;
+
+                        int indexAnswerList = Int32.Parse(AppSession.IndexAnswer.ToString());
+
+
+                        AppSession.AnswerList.Add(answerArray[indexAnswerList]);
+                        //InserMultipleAnswerQuestion(Int32.Parse(insertAnswer.answer_group_option_id.ToString()), Int32.Parse(insertAnswer.answer_question_id.ToString()), Int32.Parse(insertAnswer.answer_resp_id.ToString()));
                         
                         int answerGroupOptionId = Int32.Parse(myList.Value.ToString());
 

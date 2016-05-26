@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace QuickSurveys.Config
+namespace QuickSurveys
 {
     public class AppSession
     {
@@ -25,7 +25,10 @@ namespace QuickSurveys.Config
 
         public static List<Answer> AnswerList
         {
-            set { HttpContext.Current.Session["answerlist"] = value; }
+            set 
+            { 
+                HttpContext.Current.Session["answerlist"] = value; 
+            }
             get
             {
                 return HttpContext.Current.Session["answerlist"] as List<Answer>;
