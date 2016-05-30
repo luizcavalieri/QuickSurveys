@@ -43,5 +43,32 @@ namespace QuickSurveys
                 return HttpContext.Current.Session["indexAnswer"] as int?;
             }
         }
+
+        public static int? RespondentId
+        {
+            set { HttpContext.Current.Session["respondentId"] = value; }
+            get
+            {
+                return HttpContext.Current.Session["respondentId"] as int?;
+            }
+        }
+
+        public static int? SurveyId
+        {
+            set { HttpContext.Current.Session["surveyId"] = value; }
+            get
+            {
+                return HttpContext.Current.Session["surveyId"] as int?;
+            }
+        }
+
+        public static bool? EndOfSurvey
+        {
+            set { HttpContext.Current.Session["endOfSurvey"] = value; }
+            get
+            {
+                return HttpContext.Current.Session["endOfSurvey"] as bool?;
+            }
+        }
     }
 }

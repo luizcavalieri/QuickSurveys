@@ -30,6 +30,55 @@
             </asp:View>
 
             
+            <asp:View ID="QuestionBlockView" runat="server">
+            <%-- START QUESTIONS BLOCK --%>
+                <div class="col-lg-5">
+                <asp:Label ID="lblSurveyDesc" runat="server" Text="Label" CssClass="h2"></asp:Label>
+                <asp:Label ID="lblSurveySession" runat="server" Text="Label" CssClass="h2"></asp:Label>
+                <br /> <br />
+                <asp:Label ID="lblQuestSurveySequence" runat="server" Text="-" CssClass="h4"></asp:Label>
+                <asp:Label ID="lblQuestionDesc" runat="server" Text="-" CssClass="h4"></asp:Label>
+                <asp:Label ID="lblipAddress" runat="server" Text="-" ></asp:Label><br /> <br />
+                <%--<asp:Label ID="lblTestAnswerGroup" runat="server" Text="-" ></asp:Label><br /> <br />--%>
+            
+                <div style="display:block;">
+                    <fieldset class="form-group"> 
+                        <div class="checkbox">
+                            <asp:CheckBoxList runat="server" ID="cbxAnswerGroupOpt" CssClass="" >
+                            </asp:CheckBoxList>
+                        </div>   
+                    </fieldset>
+                    <fieldset class="form-group"> 
+                        <div class="radio">
+                            <asp:RadioButtonList ID="rdbAnswerGroupOpt" runat="server" CssClass="">
+                            </asp:RadioButtonList>
+                        </div>
+                    </fieldset>
+
+                    <asp:DropDownList ID="ddAnswerGroupOpt" runat="server" Visible="false" CssClass="form-control">
+                    </asp:DropDownList>
+        
+                    <asp:TextBox ID="numberBox" runat="server" Visible="False" MaxLength="4" TextMode="Number" CssClass="form-control"></asp:TextBox>
+
+                    <asp:TextBox ID="textAreaBox" runat="server" Visible="False" MaxLength="350" TextMode="MultiLine" Width="445" CssClass="form-control"></asp:TextBox>
+
+                    <asp:TextBox ID="textBox" runat="server" Visible="False" MaxLength="144" TextMode="SingleLine" CssClass="form-control"></asp:TextBox>
+                </div>
+                <br />
+                <div class="col-xs-5 ">
+                    <asp:Button ID="btnBack" runat="server" Text="<< Previous" CssClass="btn btn-danger form-control" onclick="PreviousQuestion_Click" Enabled="False" />
+                </div>
+                <div class="col-xs-7 ">
+                    <asp:Button ID="btnSubmit" runat="server" Text="Save and Next >>" CssClass="btn btn-success form-control" onclick="SaveAndNextQuest_Click"/>
+                </div>
+            
+            </div>
+
+            <%-- END QUESTIONS BLOCK --%>
+
+            
+            </asp:View>
+
             <asp:View ID="RegistrationView" runat="server">
             <%-- RESPONDENT REGISTRATION BLOCK --%>
                 <div class="row">
@@ -140,56 +189,7 @@
                 <%-- RESPONDENT REGISTRATION BLOCK END --%>
             </asp:View>
 
-            
-            
-            <asp:View ID="QuestionBlockView" runat="server">
-            <%-- START QUESTIONS BLOCK --%>
-                <div class="col-lg-5">
-                <asp:Label ID="lblSurveyDesc" runat="server" Text="Label" CssClass="h2"></asp:Label>
-                <asp:Label ID="lblSurveySession" runat="server" Text="Label" CssClass="h2"></asp:Label>
-                <br /> <br />
-                <asp:Label ID="lblQuestSurveySequence" runat="server" Text="-" CssClass="h4"></asp:Label>
-                <asp:Label ID="lblQuestionDesc" runat="server" Text="-" CssClass="h4"></asp:Label>
-                <asp:Label ID="lblipAddress" runat="server" Text="-" ></asp:Label><br /> <br />
-                <%--<asp:Label ID="lblTestAnswerGroup" runat="server" Text="-" ></asp:Label><br /> <br />--%>
-            
-                <div style="display:block;">
-                    <fieldset class="form-group"> 
-                        <div class="checkbox">
-                            <asp:CheckBoxList runat="server" ID="cbxAnswerGroupOpt" CssClass="" >
-                            </asp:CheckBoxList>
-                        </div>   
-                    </fieldset>
-                    <fieldset class="form-group"> 
-                        <div class="radio">
-                            <asp:RadioButtonList ID="rdbAnswerGroupOpt" runat="server" CssClass="">
-                            </asp:RadioButtonList>
-                        </div>
-                    </fieldset>
 
-                    <asp:DropDownList ID="ddAnswerGroupOpt" runat="server" Visible="false" CssClass="form-control">
-                    </asp:DropDownList>
-        
-                    <asp:TextBox ID="numberBox" runat="server" Visible="False" MaxLength="4" TextMode="Number" CssClass="form-control"></asp:TextBox>
-
-                    <asp:TextBox ID="textAreaBox" runat="server" Visible="False" MaxLength="350" TextMode="MultiLine" Width="445" CssClass="form-control"></asp:TextBox>
-
-                    <asp:TextBox ID="textBox" runat="server" Visible="False" MaxLength="144" TextMode="SingleLine" CssClass="form-control"></asp:TextBox>
-                </div>
-                <br />
-                <div class="col-xs-5 ">
-                    <asp:Button ID="btnBack" runat="server" Text="<< Previous" CssClass="btn btn-danger form-control" onclick="PreviousQuestion_Click" Enabled="False" />
-                </div>
-                <div class="col-xs-7 ">
-                    <asp:Button ID="btnSubmit" runat="server" Text="Save and Next >>" CssClass="btn btn-success form-control" onclick="SaveAndNextQuest_Click"/>
-                </div>
-            
-            </div>
-
-            <%-- END QUESTIONS BLOCK --%>
-
-            
-            </asp:View>
             <asp:View ID="ThankYouView" runat="server" EnableViewState="true" ViewStateMode="Enabled">
             <%-- START THANK YOU BLOCK --%>
             <h1> Thank you! </h1>

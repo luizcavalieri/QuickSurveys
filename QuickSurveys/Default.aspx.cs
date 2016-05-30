@@ -26,11 +26,10 @@ namespace QuickSurveys
         //int answerIndexArray;
         AppSession appSession = new AppSession();
 
-
+        
         // open the connection with the database.
         public void connectString()
         {
-            
             String myConnectionString = ConfigurationManager.ConnectionStrings["MyConnection"].ConnectionString;
 
             if (myConnectionString.Equals("prod"))
@@ -55,13 +54,30 @@ namespace QuickSurveys
         {
             if (!IsPostBack)
             {
-              
-                if (!string.IsNullOrEmpty(Session["survey_id"] as string))
+                
+                
+                if (AppSession.SurveyId != null)
                 {
-                    MultiViewMainPage.ActiveViewIndex = 2;
-                    int survSequence = Int32.Parse(Session["quest_survey_sequence"].ToString());
-                    int survId = Int32.Parse(Session["survey_id"].ToString());
-                    GetQuestion(survId, survSequence);
+                    if (AppSession.EndOfSurvey == null)
+                    {
+                        AppSession.EndOfSurvey = false;
+                    }
+
+
+                    if (AppSession.EndOfSurvey == true)
+                    {
+                        FillDropDownState();
+                        FillDropDownGender();
+                        MultiViewMainPage.ActiveViewIndex = 2;
+                    }
+                    else
+                    {
+                        MultiViewMainPage.ActiveViewIndex = 1;
+                        int survSequence = Int32.Parse(Session["quest_survey_sequence"].ToString());
+                        int? survId = AppSession.SurveyId;
+                        GetQuestion(survId, survSequence);
+                    }
+                    
                     
                 }
                 else 
@@ -147,15 +163,15 @@ namespace QuickSurveys
         {
             Button btn = (Button)sender;
             
-            Session["survey_id"] = btn.CommandArgument.ToString();
+            AppSession.SurveyId = Int32.Parse(btn.CommandArgument.ToString());
             Session["quest_survey_sequence"] = 1;
             GetIPAddress();
 
-            if (!string.IsNullOrEmpty(Session["survey_id"] as string))
+            if (AppSession.SurveyId != null)
             {
                 MultiViewMainPage.ActiveViewIndex = 1;
-                FillDropDownState();
-                FillDropDownGender();
+                int questSequence = Int32.Parse(Session["quest_survey_sequence"].ToString());
+                GetQuestion(AppSession.SurveyId, questSequence);
 
             }
             
@@ -207,86 +223,111 @@ namespace QuickSurveys
         }
 
         // show questions by the survey and sequence
-        private void GetQuestion(int surveyId, int questSequence)
+        private void GetQuestion(int? surveyId, int questSequence)
         {
-            //hidding the back button in case this is the first question.
-            if (questSequence == 1)
+
+            if (Session["answer_group_option_child"] == null)
             {
-                btnBack.Visible = false;
+                Session["answer_group_option_child"] = false;
             }
-            else
+                
+            if (AppSession.SurveyId != null)
             {
-                btnBack.Visible = true;
-            }
+                //hidding the back button in case this is the first question.
+                if (questSequence == 1)
+                {
+                    btnBack.Visible = false;
+                }
+                else
+                {
+                    btnBack.Visible = true;
+                }
 
-            int? previousQuest;
-            bool answerGroupChildFlag;
-            connectString();
+                int? previousQuest;
+                bool answerGroupChildFlag;
+                connectString();
 
-            SqlDataReader myReader;
+                SqlDataReader myReader;
 
-            // if current question is null it means that this is not the first question 
-            //so the system can start the check if there is any answer that is flagged for child question.
+                // if current question is null it means that this is not the first question 
+                //so the system can start the check if there is any answer that is flagged for child question.
 
-            if (Session["current_question"] != null)
-            {
-                previousQuest = Int32.Parse(Session["current_question"].ToString());
-                answerGroupChildFlag = bool.Parse(Session["answer_group_option_child"].ToString());
-            }
-            else
-            {
-                previousQuest = 0;
-                answerGroupChildFlag = false;
-            }
+                if (Session["current_question"] != null)
+                {
+                    previousQuest = Int32.Parse(Session["current_question"].ToString());
+                    answerGroupChildFlag = bool.Parse(Session["answer_group_option_child"].ToString());
+                }
+                else
+                {
+                    previousQuest = 0;
+                    answerGroupChildFlag = false;
+                }
 
-            // Check if respondent answerede any question with an answer flagged
-            if (answerGroupChildFlag)
-            {
-                String queryQuestionInputType = @"SELECT qt.quest_id, 
-                                                     qt.quest_description, 
-                                                     qt.quest_survey_id,
-                                                     qt.quest_main_id,
-                                                     qt.quest_child_sequence,
-                                                     qt.quest_survey_sequence,  
-                                                     qt.quest_input_type_id, 
-                                                     qt.quest_answer_group_id, 
-                                                     it.input_type_desc, 
-                                                     srv.survey_description 
-                                             FROM questions qt
-                                             JOIN input_type it
-                                             ON qt.quest_input_type_id = it.input_type_id
-                                             Join surveys srv 
-                                             ON qt.quest_survey_id = srv.survey_id
-                                             where quest_main_id = " + previousQuest;
+                // Check if respondent answerede any question with an answer flagged
+                if (answerGroupChildFlag)
+                {
+                    String queryQuestionInputType = @"SELECT qt.quest_id, 
+                                                         qt.quest_description, 
+                                                         qt.quest_survey_id,
+                                                         qt.quest_main_id,
+                                                         qt.quest_child_sequence,
+                                                         qt.quest_survey_sequence,  
+                                                         qt.quest_input_type_id, 
+                                                         qt.quest_answer_group_id, 
+                                                         it.input_type_desc, 
+                                                         srv.survey_description 
+                                                 FROM questions qt
+                                                 JOIN input_type it
+                                                 ON qt.quest_input_type_id = it.input_type_id
+                                                 Join surveys srv 
+                                                 ON qt.quest_survey_id = srv.survey_id
+                                                 where quest_main_id = " + previousQuest;
 
-                //get the sql script executing on the connection
-                myCommand = new SqlCommand(queryQuestionInputType, myConnection);
+                    //get the sql script executing on the connection
+                    myCommand = new SqlCommand(queryQuestionInputType, myConnection);
 
-                int surveyTemp = Int32.Parse(Session["quest_survey_sequence"].ToString()) - 1;
-                Session["quest_survey_sequence"] = surveyTemp;
+                    int surveyTemp = Int32.Parse(Session["quest_survey_sequence"].ToString()) - 1;
+                    Session["quest_survey_sequence"] = surveyTemp;
 
-            }
-            else
-            {
-                String queryQuestionInputType = @"SELECT qt.quest_id, 
-                                                     qt.quest_description, 
-                                                     qt.quest_survey_id,
-                                                     qt.quest_survey_sequence, 
-                                                     qt.quest_input_type_id, 
-                                                     qt.quest_answer_group_id, 
-                                                     it.input_type_desc, 
-                                                     srv.survey_description 
-                                             FROM questions qt
-                                             JOIN input_type it
-                                             ON qt.quest_input_type_id = it.input_type_id
-                                             Join surveys srv 
-                                             ON qt.quest_survey_id = srv.survey_id
-                                             where quest_survey_id = " + surveyId + @" and 
-                                             quest_survey_sequence = " +questSequence;
+                }
+                else
+                {
+                    String queryQuestionInputType = @"SELECT qt.quest_id, 
+                                                         qt.quest_description, 
+                                                         qt.quest_survey_id,
+                                                         qt.quest_survey_sequence, 
+                                                         qt.quest_input_type_id, 
+                                                         qt.quest_answer_group_id, 
+                                                         it.input_type_desc, 
+                                                         srv.survey_description 
+                                                 FROM questions qt
+                                                 JOIN input_type it
+                                                 ON qt.quest_input_type_id = it.input_type_id
+                                                 Join surveys srv 
+                                                 ON qt.quest_survey_id = srv.survey_id
+                                                 where quest_survey_id = " + surveyId + @" and 
+                                                 quest_survey_sequence = " + questSequence;
 
 
-                //get the sql script executing on the connection
-                myCommand = new SqlCommand(queryQuestionInputType, myConnection);
+                    //get the sql script executing on the connection
+                    myCommand = new SqlCommand(queryQuestionInputType, myConnection);
+
+                    //open connection
+                    myConnection.Open();
+
+                    //open the reader
+                    myReader = myCommand.ExecuteReader();
+
+
+                    // redirect the page to the registration page after finishing the survey
+                    if (CheckLastQuest(myReader) == 0)
+                    {
+                        AppSession.EndOfSurvey = true;
+                        Response.Redirect("~/Default.aspx");
+                    }
+
+                    myConnection.Close();
+                }
 
                 //open connection
                 myConnection.Open();
@@ -294,26 +335,73 @@ namespace QuickSurveys
                 //open the reader
                 myReader = myCommand.ExecuteReader();
 
-                
-                // trying to redirect the page to the thank you page after finishing the survey
-                if (CheckLastQuest(myReader) == 0)
-                {
-                    MultiViewMainPage.ActiveViewIndex = 3;
-                }
-
-                myConnection.Close();
+                // populate the answer option objects from the database
+                PopulateMultiAnswer(myReader);
             }
 
-            //open connection
-            myConnection.Open();
-
-            //open the reader
-            myReader = myCommand.ExecuteReader();
-
-            // populate the answer option objects from the database
-            PopulateMultiAnswer(myReader);
-
         
+        }
+
+        private void InsertQuestsToDatabase(int? respondentId)
+        {
+            
+            for (int i = 0; i < AppSession.AnswerList.Count; i++)
+            {
+                int? answer_numeric = AppSession.AnswerList[i].answer_numeric;
+                string answer_text = AppSession.AnswerList[i].answer_text;
+                bool? answer_boolean = AppSession.AnswerList[i].answer_boolean;
+                int? answer_resp_id = respondentId;
+                int? answer_quest_id = AppSession.AnswerList[i].answer_question_id;
+                int? answer_group_option_id = AppSession.AnswerList[i].answer_group_option_id;
+                connectString();
+
+                
+                
+
+                string insertAnswers = @"INSERT INTO answers
+                                            (answer_numeric ,answer_text ,answer_boolean ,answer_resp_id ,answer_question_id ,answer_group_option_id)
+                                          values
+                                            (@answer_numeric, @answer_text, @answer_boolean, @answer_resp_id, @answer_quest_id, @answer_group_option_id)";
+
+                //open connectio
+               // myConnection.Open();
+
+               // //get the sql script executing on the connection
+               myCommand = new SqlCommand(insertAnswers, myConnection);
+
+               myConnection.Open();
+               myCommand.Parameters.AddWithValue("@answer_numeric", GetDataValue(answer_numeric));
+               myCommand.Parameters.AddWithValue("@answer_text", GetDataValue(answer_text));
+               myCommand.Parameters.AddWithValue("@answer_boolean", GetDataValue(answer_boolean));
+               myCommand.Parameters.AddWithValue("@answer_resp_id", GetDataValue(answer_resp_id));
+               myCommand.Parameters.AddWithValue("@answer_quest_id", GetDataValue(answer_quest_id));
+               myCommand.Parameters.AddWithValue("@answer_group_option_id", GetDataValue(answer_group_option_id));
+
+
+               int success = myCommand.ExecuteNonQuery();
+
+               //if (success != 1)
+               //{
+               //    ("It didn't insert shit:" + query);
+               //}
+
+               if (myConnection.State == System.Data.ConnectionState.Open)
+                    myConnection.Close();
+
+               //int? checkIfInsert = modified;
+
+            }
+        }
+        
+        // handling the "NULL" values to insert in the database
+        public static object GetDataValue(object value)
+        {
+            if (value == null)
+            {
+                return DBNull.Value;
+            }
+
+            return value;
         }
 
         // populate the objects from the data in the database
@@ -390,7 +478,7 @@ namespace QuickSurveys
             lblQuestionDesc.Text = currentQuestion.quest_description;
             lblQuestSurveySequence.Text = currentQuestion.quest_survey_sequence.ToString();
             lblSurveyDesc.Text = currentSurvey.survey_description;
-            lblSurveySession.Text = Session["survey_id"].ToString();
+            lblSurveySession.Text = AppSession.SurveyId.ToString();
             //lblTestAnswerGroup.Text = currentQuestion.quest_answer_group_id.ToString();
         }
 
@@ -486,7 +574,7 @@ namespace QuickSurveys
                                             from questions qt
                                             Join answer_group_option ago
                                             on qt.quest_answer_group_id = ago.answer_group_id
-                                            where qt.quest_survey_id = " + Session["survey_id"];
+                                            where qt.quest_survey_id = " + AppSession.SurveyId;
 
 
             //get the sql script executing on the connection
@@ -515,7 +603,7 @@ namespace QuickSurveys
 		                                            quest_multi_answer, 
 		                                            quest_description
 		                                    from questions qt
-                                            where quest_survey_id = " + Session["survey_id"] + @" and
+                                            where quest_survey_id = " + AppSession.SurveyId + @" and
                                             quest_multi_answer = 0";
 
 
@@ -552,10 +640,10 @@ namespace QuickSurveys
             int surveyTemp = Int32.Parse(Session["quest_survey_sequence"].ToString()) + 1;
             Session["quest_survey_sequence"] = surveyTemp;
                                                 
-            int indexAnswerArray = GetIndexAnswerArray();
+            //int indexAnswerArray = GetIndexAnswerArray();
             bool answerGroupOptionChild = false;
 
-            GetAnswersByInputType(indexAnswerArray, answerGroupOptionChild, answerArray);
+            GetAnswersByInputType(answerGroupOptionChild, answerArray);
             
             Response.Redirect("~/Default.aspx");
             //GetQuestion(survId, survSequence);
@@ -648,7 +736,7 @@ namespace QuickSurveys
 
         /* getting the answer depending on the input type
          input types treated RadioButton, CheckBox, TextBox, DropDownList, NumericAnswer, */
-        public void GetAnswersByInputType(int indexAnswerArray, bool answerGroupOptionChild, Answer[] answerArray) 
+        public void GetAnswersByInputType(bool answerGroupOptionChild, Answer[] answerArray) 
         {
             int inputType = Int32.Parse(Session["input_type"].ToString());
             Answer insertAnswer = new Answer();
@@ -669,7 +757,7 @@ namespace QuickSurveys
                     {
                         insertAnswer.answer_group_option_id = Int32.Parse(myList.Value.ToString());
                         insertAnswer.answer_question_id = Int32.Parse(Session["current_question"].ToString());
-                        insertAnswer.answer_resp_id = Int32.Parse(Session["respondent_id"].ToString());
+                        //insertAnswer.answer_resp_id = Int32.Parse(AppSession.RespondentId.ToString());
                         AppSession.IndexAnswer++;
 
                         //int indexAnswerList = Int32.Parse(AppSession.IndexAnswer.ToString());
@@ -693,13 +781,17 @@ namespace QuickSurveys
                 insertAnswer = new Answer();
                 insertAnswer.answer_group_option_id = string.IsNullOrEmpty(rdbAnswerGroupOpt.SelectedValue.ToString()) ? 0 : int.Parse(rdbAnswerGroupOpt.SelectedValue.ToString());
                 insertAnswer.answer_question_id = Int32.Parse(Session["current_question"].ToString());
-                insertAnswer.answer_resp_id = Int32.Parse(Session["respondent_id"].ToString());
+                //insertAnswer.answer_resp_id = Int32.Parse(AppSession.RespondentId.ToString());
+
+                AppSession.IndexAnswer++;
+
+                AppSession.AnswerList.Add(insertAnswer);
 
                 int? answerGroupOptionId = int.Parse(insertAnswer.answer_group_option_id.ToString());
 
                 //InserMultipleAnswerQuestion(answerGroupOptionId, Int32.Parse(insertAnswer.answer_question_id.ToString()), Int32.Parse(insertAnswer.answer_resp_id.ToString()));
 
-                indexAnswerArray++;
+                
                 if (!string.IsNullOrEmpty(rdbAnswerGroupOpt.SelectedValue.ToString())) 
                 {
                     if (GetLogicalAnswer(answerGroupOptionId))
@@ -715,8 +807,12 @@ namespace QuickSurveys
                 insertAnswer = new Answer();
                 insertAnswer.answer_text = textAreaBox.Text;
                 insertAnswer.answer_question_id = Int32.Parse(Session["current_question"].ToString());
-                insertAnswer.answer_resp_id = Int32.Parse(Session["respondent_id"].ToString());
+                //insertAnswer.answer_resp_id = Int32.Parse(AppSession.RespondentId.ToString());
                // InsertTextAnswer(insertAnswer.answer_text, insertAnswer.answer_question_id, insertAnswer.answer_resp_id);
+
+                AppSession.IndexAnswer++;
+                AppSession.AnswerList.Add(insertAnswer);
+
             }
             
             // if the input type is an email, telephone, text, url, or any type that is a string with multiple characters
@@ -725,8 +821,12 @@ namespace QuickSurveys
                 insertAnswer = new Answer();
                 insertAnswer.answer_text = textBox.Text;
                 insertAnswer.answer_question_id = Int32.Parse(Session["current_question"].ToString());
-                insertAnswer.answer_resp_id = Int32.Parse(Session["respondent_id"].ToString());
+                //insertAnswer.answer_resp_id = Int32.Parse(AppSession.RespondentId.ToString());
                // InsertTextAnswer(insertAnswer.answer_text, insertAnswer.answer_question_id, insertAnswer.answer_resp_id);
+
+                AppSession.IndexAnswer++;
+                AppSession.AnswerList.Add(insertAnswer);
+
             }
 
             // // if the input type is a NUMERIC TEXTBOX
@@ -735,8 +835,11 @@ namespace QuickSurveys
                 insertAnswer = new Answer();
                 insertAnswer.answer_numeric = string.IsNullOrEmpty(numberBox.Text.ToString()) ? 0 : Int32.Parse(numberBox.Text.ToString());
                 insertAnswer.answer_question_id = Int32.Parse(Session["current_question"].ToString());
-                insertAnswer.answer_resp_id = Int32.Parse(Session["respondent_id"].ToString());
+               // insertAnswer.answer_resp_id = Int32.Parse(AppSession.RespondentId.ToString());
                // InsertNumericAnswer(insertAnswer.answer_numeric, insertAnswer.answer_question_id, insertAnswer.answer_resp_id);
+
+                AppSession.IndexAnswer++;
+                AppSession.AnswerList.Add(insertAnswer);
             }
             
             // if the input type is DROPDOWNLIST
@@ -745,18 +848,21 @@ namespace QuickSurveys
                
                 insertAnswer.answer_group_option_id = string.IsNullOrEmpty(ddAnswerGroupOpt.SelectedValue.ToString()) ? 0 : Int32.Parse(ddAnswerGroupOpt.SelectedValue.ToString());
                 insertAnswer.answer_question_id = Int32.Parse(Session["current_question"].ToString());
-                insertAnswer.answer_resp_id = Int32.Parse(Session["respondent_id"].ToString());
+              //  insertAnswer.answer_resp_id = Int32.Parse(AppSession.RespondentId.ToString());
                 int? answerGroupOptionId = int.Parse(insertAnswer.answer_group_option_id.ToString());
-                
               //  InserMultipleAnswerQuestion(answerGroupOptionId, Int32.Parse(insertAnswer.answer_question_id.ToString()), Int32.Parse(insertAnswer.answer_resp_id.ToString()));
+
+                AppSession.IndexAnswer++;
+                AppSession.AnswerList.Add(insertAnswer);
                 
                 // check if the question has a child
-                indexAnswerArray++;
+                
                 if (!string.IsNullOrEmpty(rdbAnswerGroupOpt.SelectedValue.ToString()))
                 {
                     if (GetLogicalAnswer(answerGroupOptionId))
                     {
                         answerGroupOptionChild = true;
+                        
                     }
                 }
             }
@@ -764,13 +870,12 @@ namespace QuickSurveys
                         
             // adding the values collected in the answer array to the session
             Session["answer_group_option_child"] = answerGroupOptionChild;
-            //Session["array_answer_index"] = indexAnswerArray;
-            //Session["answer_array"] = answerArray;
+            
             
         }
 
-        // get the Index for adding the values for the answer array 
-        public int GetIndexAnswerArray()
+         //get the Index for adding the values for the answer array 
+        /*public int GetIndexAnswerArray()
         {
             int indexAnswerArray;
 
@@ -784,16 +889,16 @@ namespace QuickSurveys
             }
 
             return indexAnswerArray;
-        }
+        }*/
+
 
         // check if the answer has a child question
         private bool GetLogicalAnswer(int? answerGroupOptionChild)
         {
-            
             connectString();
 
             String queryAnswerLogical = @"Select answer_group_logical_answer, answer_group_option_id from answer_group_option
-                                          where answer_group_option_id = " + answerGroupOptionChild;
+                                        where answer_group_option_id = " + answerGroupOptionChild;
 
 
             //get the sql script executing on the connection
@@ -816,7 +921,7 @@ namespace QuickSurveys
                 questionChild = false;
             }
 
-            
+
             myConnection.Close();
 
             if (questionChild)
@@ -827,19 +932,19 @@ namespace QuickSurveys
             {
                 return false;
             }
+
         }
 
         //Skiping the registration from the respondent
         protected void SkipRegistration_click(object sender, EventArgs e)
         {
-            Session["answer_group_option_child"] = false;
-            if (!string.IsNullOrEmpty(Session["survey_id"] as string))
-            {
+            //if (!string.IsNullOrEmpty(AppSession.SurveyId as string))
+            //{
             
                 connectString();
             
                 string ipAddres = GetIPAddress();
-                int surveyId = Int32.Parse(Session["survey_id"].ToString());
+                int surveyId = Int32.Parse(AppSession.SurveyId.ToString());
 
                 String insertAnonymousResp = @"insert into respondents ( resp_gender,    
                                                                          resp_age_range,    
@@ -867,18 +972,18 @@ namespace QuickSurveys
                 if (myConnection.State == System.Data.ConnectionState.Open)
                     myConnection.Close();
 
-                Session["respondent_id"] = modified;
+                AppSession.RespondentId = modified;
 
-            
-                //surveyId = Int32.Parse(Session["survey_id"].ToString());
-                int questSequence = Int32.Parse(Session["quest_survey_sequence"].ToString());
-                GetQuestion(surveyId, questSequence);
-                MultiViewMainPage.ActiveViewIndex = 2;
-            }
-            else
-            {
-                MultiViewMainPage.ActiveViewIndex = 0;
-            }
+                InsertQuestsToDatabase(AppSession.RespondentId);
+                                
+                //surveyId = Int32.Parse(AppSession.SurveyId.ToString());
+                MultiViewMainPage.ActiveViewIndex = 3;
+
+            //}
+            //else
+            //{
+            //    MultiViewMainPage.ActiveViewIndex = 0;
+            //}
 
 
         }
