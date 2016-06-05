@@ -26,8 +26,19 @@ namespace QuickSurveys
         public static List<Answer> AnswerList
         {
             set 
-            { 
-                HttpContext.Current.Session["answerlist"] = value; 
+            {
+                //if (HttpContext.Current.Session["answerlist"] == null)
+                //{
+                    HttpContext.Current.Session["answerlist"] = value;
+                //}
+                //else
+                //{
+                //    List<Answer> tmp = HttpContext.Current.Session["answerlist"] as List<Answer>;
+
+                //    tmp.Add(value[0]);
+
+                //    HttpContext.Current.Session["answerlist"] = tmp;
+                //}
             }
             get
             {

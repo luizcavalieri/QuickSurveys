@@ -845,18 +845,14 @@ namespace QuickSurveys
             // if the input type is DROPDOWNLIST
             else if (inputType == 18)
             {
-               
                 insertAnswer.answer_group_option_id = string.IsNullOrEmpty(ddAnswerGroupOpt.SelectedValue.ToString()) ? 0 : Int32.Parse(ddAnswerGroupOpt.SelectedValue.ToString());
                 insertAnswer.answer_question_id = Int32.Parse(Session["current_question"].ToString());
-              //  insertAnswer.answer_resp_id = Int32.Parse(AppSession.RespondentId.ToString());
                 int? answerGroupOptionId = int.Parse(insertAnswer.answer_group_option_id.ToString());
-              //  InserMultipleAnswerQuestion(answerGroupOptionId, Int32.Parse(insertAnswer.answer_question_id.ToString()), Int32.Parse(insertAnswer.answer_resp_id.ToString()));
-
+              
                 AppSession.IndexAnswer++;
                 AppSession.AnswerList.Add(insertAnswer);
                 
                 // check if the question has a child
-                
                 if (!string.IsNullOrEmpty(rdbAnswerGroupOpt.SelectedValue.ToString()))
                 {
                     if (GetLogicalAnswer(answerGroupOptionId))
@@ -867,10 +863,8 @@ namespace QuickSurveys
                 }
             }
 
-                        
             // adding the values collected in the answer array to the session
             Session["answer_group_option_child"] = answerGroupOptionChild;
-            
             
         }
 
