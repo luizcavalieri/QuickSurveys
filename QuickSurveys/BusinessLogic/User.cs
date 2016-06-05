@@ -32,6 +32,13 @@ namespace QuickSurveys
             get { return _user_fname; }
             set { _user_fname = value; }
         }
+
+        public string user_lname
+        {
+            get { return _user_lname; }
+            set { _user_lname = value; }
+        }
+
         public string user_password
         {
             get { return _user_password; }

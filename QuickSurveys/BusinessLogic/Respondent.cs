@@ -8,17 +8,16 @@ namespace QuickSurveys
     public class Respondent : User
     {
         int _resp_id;
-        string _resp_gender;
-        int _resp_age_range;
+        int _resp_gender;
         int _resp_state_territory;
         string _resp_email;
         string _resp_home_suburb;
         int _res_home_post_code;
         int _resp_work_post_code;
         string _resp_work_suburb;
-        DateTime _resp_dob;
         DateTime _resp_date;
         string _resp_ip;
+        int _resp_user_id;
         int _resp_survey_id;
     
 
@@ -28,18 +27,13 @@ namespace QuickSurveys
                 set { _resp_id = value; }
             }
 
-        public string resp_gender
+        public int resp_gender
         {
             get { return _resp_gender; }
             set { _resp_gender = value; }
         }
 
-        public int resp_age_range
-        {
-            get { return _resp_age_range; }
-            set { _resp_age_range = value; }
-        }
-
+        
         public int resp_state_territory
         {
             get { return _resp_state_territory; }
@@ -76,23 +70,24 @@ namespace QuickSurveys
             set { _resp_work_suburb = value; }
         }
 
-        public DateTime resp_dob
-        {
-            get { return _resp_dob; }
-            set { _resp_dob = value; }
-        }
-       
-       
         public DateTime resp_date
         {
             get { return _resp_date; }
             set { _resp_date = value; }
         }
+
         public string resp_ip
         {
             get { return _resp_ip; }
             set { _resp_ip = value; }
         }
+
+        public int resp_user_id
+        {
+            get { return _resp_user_id; }
+            set { _resp_user_id = value; }
+        }
+
         public int resp_survey_id
         {
             get { return _resp_survey_id; }

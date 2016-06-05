@@ -25,7 +25,7 @@ namespace QuickSurveys
         List<Answer[]> answerList = new List<Answer[]>();
         //int answerIndexArray;
         AppSession appSession = new AppSession();
-
+        User currentUser = new User();
         
         // open the connection with the database.
         public void connectString()
@@ -355,17 +355,12 @@ namespace QuickSurveys
                 int? answer_group_option_id = AppSession.AnswerList[i].answer_group_option_id;
                 connectString();
 
-                
-                
-
                 string insertAnswers = @"INSERT INTO answers
                                             (answer_numeric ,answer_text ,answer_boolean ,answer_resp_id ,answer_question_id ,answer_group_option_id)
                                           values
                                             (@answer_numeric, @answer_text, @answer_boolean, @answer_resp_id, @answer_quest_id, @answer_group_option_id)";
 
-                //open connectio
-               // myConnection.Open();
-
+                
                // //get the sql script executing on the connection
                myCommand = new SqlCommand(insertAnswers, myConnection);
 
@@ -929,6 +924,93 @@ namespace QuickSurveys
 
         }
 
+        protected int InsertUser(string username, string user_fname, string user_lname, string user_password, string user_pref_phone, DateTime user_dob, string user_role)
+        {
+            int user_id = 0;
+
+            String insertUser = @"insert into users (username, user_fname, user_lname, user_password, user_role, user_pref_phone, user_dob)   
+                                    output inserted.user_id values (@username, @user_fname, @user_lname, @user_password, @user_role, @user_pref_phone, @user_dob);";
+
+            myCommand = new SqlCommand(insertUser, myConnection);
+
+            myConnection.Open();
+            myCommand.Parameters.AddWithValue("@username", GetDataValue(username));
+            myCommand.Parameters.AddWithValue("@user_fname", GetDataValue(user_fname));
+            myCommand.Parameters.AddWithValue("@user_lname", GetDataValue(user_lname));
+            myCommand.Parameters.AddWithValue("@user_password", GetDataValue(user_password));
+            myCommand.Parameters.AddWithValue("@user_role", GetDataValue(user_role));
+            myCommand.Parameters.AddWithValue("@user_pref_phone", GetDataValue(user_pref_phone));
+            myCommand.Parameters.AddWithValue("@user_dob", GetDataValue(user_dob));
+
+            user_id = (int)myCommand.ExecuteScalar();
+
+            if (myConnection.State == System.Data.ConnectionState.Open)
+                myConnection.Close();
+
+            return user_id;
+        }
+
+
+        protected void RespondentRegistration_Click(object sender, EventArgs e)
+        {
+            connectString();
+
+            currentUser.username = tbxEmail.Text.ToString();
+            currentUser.user_fname = tbxFirstName.Text.ToString();
+            currentUser.user_lname = tbxLastName.Text.ToString();
+            currentUser.user_dob = DateTime.Parse(tbxDateOfBirth.Text.ToString());
+            currentUser.user_role = "respondent";
+            currentUser.user_pref_phone = tbxPhone.Text.ToString();
+            currentUser.user_password = tbxPassword.Text.ToString();
+            currentRespondent.resp_ip = GetIPAddress();
+            currentRespondent.resp_survey_id = Int32.Parse(AppSession.SurveyId.ToString());
+            currentRespondent.resp_gender = Int32.Parse(ddRespGender.SelectedValue.ToString());
+            currentRespondent.resp_state_territory = Int32.Parse(ddState.SelectedValue.ToString());
+            currentRespondent.resp_email = tbxEmail.Text.ToString();
+            currentRespondent.resp_home_suburb = tbxSuburbHome.Text.ToString();
+            currentRespondent.resp_work_suburb = tbxSuburbWork.Text.ToString();
+            currentRespondent.res_home_post_code = Int32.Parse(tbxPostCodeHome.Text.ToString());
+            currentRespondent.resp_work_post_code = Int32.Parse(tbxPostCodeWork.Text.ToString());
+            currentRespondent.resp_user_id = Int32.Parse(InsertUser(currentUser.username, currentUser.user_fname, currentUser.user_lname, currentUser.user_password, currentUser.user_pref_phone, currentUser.user_dob, currentUser.user_role).ToString());
+
+
+            String insertRespondent = @"insert into respondents ( resp_gender, resp_state_territory, resp_email, resp_home_suburb, res_home_post_code, resp_work_post_code, resp_work_suburb, resp_IP, resp_user_id, resp_date, resp_survey_id)   
+                                    output inserted.resp_id values (@resp_gender, @resp_state_territory, @resp_email, @resp_home_suburb, @res_home_post_code, @resp_work_post_code, @resp_work_suburb, @resp_IP, @resp_user_id, getdate(), @resp_survey_id);";
+
+
+            myCommand = new SqlCommand(insertRespondent, myConnection);
+
+            myConnection.Open();
+            myCommand.Parameters.AddWithValue("@resp_gender", GetDataValue(currentRespondent.resp_gender));
+            myCommand.Parameters.AddWithValue("@resp_state_territory", GetDataValue(currentRespondent.resp_state_territory));
+            myCommand.Parameters.AddWithValue("@resp_email", GetDataValue(currentRespondent.resp_email));
+            myCommand.Parameters.AddWithValue("@resp_home_suburb", GetDataValue(currentRespondent.resp_home_suburb));
+            myCommand.Parameters.AddWithValue("@res_home_post_code", GetDataValue(currentRespondent.res_home_post_code));
+            myCommand.Parameters.AddWithValue("@resp_work_post_code", GetDataValue(currentRespondent.resp_work_post_code));
+            myCommand.Parameters.AddWithValue("@resp_work_suburb", GetDataValue(currentRespondent.resp_work_suburb));
+            myCommand.Parameters.AddWithValue("@resp_IP", GetDataValue(currentRespondent.resp_ip));
+            myCommand.Parameters.AddWithValue("@resp_user_id", GetDataValue(currentRespondent.resp_user_id));
+            myCommand.Parameters.AddWithValue("@resp_survey_id", GetDataValue(currentRespondent.resp_survey_id));
+
+            ////get the sql script executing on the connection
+            //myCommand = new SqlCommand(insertAnonymousResp, myConnection);
+
+            ////open connectio
+            //myConnection.Open();
+
+            int? modified = (int?)myCommand.ExecuteScalar();
+
+            if (myConnection.State == System.Data.ConnectionState.Open)
+                myConnection.Close();
+
+            AppSession.RespondentId = modified;
+
+            InsertQuestsToDatabase(AppSession.RespondentId);
+
+            //surveyId = Int32.Parse(AppSession.SurveyId.ToString());
+            MultiViewMainPage.ActiveViewIndex = 3;
+        }
+
         //Skiping the registration from the respondent
         protected void SkipRegistration_click(object sender, EventArgs e)
         {
@@ -940,8 +1022,7 @@ namespace QuickSurveys
                 string ipAddres = GetIPAddress();
                 int surveyId = Int32.Parse(AppSession.SurveyId.ToString());
 
-                String insertAnonymousResp = @"insert into respondents ( resp_gender,    
-                                                                         resp_age_range,    
+                String insertAnonymousResp = @"insert into respondents ( resp_gender,     
                                                                          resp_state_territory,    
                                                                          resp_email,
                                                                          resp_home_suburb,    
@@ -952,7 +1033,7 @@ namespace QuickSurveys
                                                                          resp_user_id,
                                                                          resp_date,    
                                                                          resp_survey_id)   
-                                                output inserted.resp_id values ('', '', '', 'anonymous@anonymous.com', '', 0, 0, '', '" + ipAddres + "', 5, getdate(), " + surveyId  + ");";
+                                                output inserted.resp_id values ('', '', 'anonymous@anonymous.com', '', 0, 0, '', '" + ipAddres + "', 5, getdate(), " + surveyId  + ");";
 
             
                 //get the sql script executing on the connection
