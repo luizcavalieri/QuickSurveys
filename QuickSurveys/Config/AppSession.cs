@@ -81,5 +81,16 @@ namespace QuickSurveys
                 return HttpContext.Current.Session["endOfSurvey"] as bool?;
             }
         }
+
+        public static int? HashPassword
+        {
+            set { HttpContext.Current.Session["hashPassword"] = value; }
+            get
+            {
+                return HttpContext.Current.Session["hashPassword"] as int?;
+            }
+
+        }
+
     }
 }

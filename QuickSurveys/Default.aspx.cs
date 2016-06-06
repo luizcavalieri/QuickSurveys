@@ -26,6 +26,7 @@ namespace QuickSurveys
         //int answerIndexArray;
         AppSession appSession = new AppSession();
         User currentUser = new User();
+        protected const string passwordMask = "*********************************************************************************************************************************";
         
         // open the connection with the database.
         public void connectString()
@@ -54,7 +55,18 @@ namespace QuickSurveys
         {
             if (!IsPostBack)
             {
-                
+                //detect if password was changed. if filled and not equal to mask, it is new
+                if (tbxPassword.Text.Trim().Length > 0 && tbxPassword.Text != passwordMask)
+                {
+                    TypedPassword = tbxPassword.Text;
+                    tbxPassword.Attributes.Add("value", passwordMask);
+                }
+                tbxPassword.Attributes.Add("onclick", "Clear_Password('" + tbxPassword.ClientID + "')");
+
+                if (!ClientScript.IsClientScriptBlockRegistered("Clear_Password"))
+                {
+                    ClientScript.RegisterClientScriptBlock(typeof(string), "Clear_Password", "function Clear_Password(id){ try{document.getElementById(id).value = '';} catch(ex){/* do nothing */} }", true);
+                }
                 
                 if (AppSession.SurveyId != null)
                 {
@@ -950,10 +962,33 @@ namespace QuickSurveys
             return user_id;
         }
 
-
+        protected string TypedPassword
+        {
+            get
+            {
+                if (ViewState["TypedPassword"] != null)
+                {
+                    return Convert.ToString(ViewState["TypedPassword"]);
+                }
+                return null;
+            }
+            set
+            {
+                ViewState["TypedPassword"] = value;
+            }
+        }
+        
         protected void RespondentRegistration_Click(object sender, EventArgs e)
         {
             connectString();
+
+            string password = TypedPassword;
+
+            //tbxPassword.Attributes.Add("value", tbxPassword.Text);
+
+            string encodedPassword = password;
+
+            //string encodedPassword = currentUser.EncodePasswordToBase64(password);
 
             currentUser.username = tbxEmail.Text.ToString();
             currentUser.user_fname = tbxFirstName.Text.ToString();
@@ -961,7 +996,7 @@ namespace QuickSurveys
             currentUser.user_dob = DateTime.Parse(tbxDateOfBirth.Text.ToString());
             currentUser.user_role = "respondent";
             currentUser.user_pref_phone = tbxPhone.Text.ToString();
-            currentUser.user_password = tbxPassword.Text.ToString();
+            currentUser.user_password = encodedPassword;
             currentRespondent.resp_ip = GetIPAddress();
             currentRespondent.resp_survey_id = Int32.Parse(AppSession.SurveyId.ToString());
             currentRespondent.resp_gender = Int32.Parse(ddRespGender.SelectedValue.ToString());

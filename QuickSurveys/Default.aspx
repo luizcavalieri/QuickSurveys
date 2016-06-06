@@ -120,7 +120,7 @@
                                 </div>
                                 <div class="col-xs-3 form-group">
                                     <asp:Label ID="lblPasswordRegistration" runat="server" Text="Password" Font-Bold="True" ></asp:Label>
-                                    <asp:TextBox ID="tbxlblPasswordRegistration" runat="server" TextMode="Password" ToolTip="Password for registration" CssClass="form-control"></asp:TextBox>
+                                    <asp:TextBox ID="tbxlblPasswordRegistration" runat="server" TextMode="Text" ToolTip="Password for registration" CssClass="form-control" MaxLength="128"></asp:TextBox>
                                 </div>
                                 <div class="col-xs-3 form-group">
                                      <%--<asp:Label ID="Label4" runat="server" Text="Date of Birth" Font-Bold="True"></asp:Label>
