@@ -292,13 +292,13 @@ namespace QuickSurveys {
         protected global::System.Web.UI.WebControls.Label lblPasswordRegistration;
         
         /// <summary>
-        /// tbxlblPasswordRegistration control.
+        /// tbxPasswordRegistration control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox tbxlblPasswordRegistration;
+        protected global::System.Web.UI.WebControls.TextBox tbxPasswordRegistration;
         
         /// <summary>
         /// lblState control.

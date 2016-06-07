@@ -26,7 +26,6 @@ namespace QuickSurveys
         //int answerIndexArray;
         AppSession appSession = new AppSession();
         User currentUser = new User();
-        protected const string passwordMask = "*********************************************************************************************************************************";
         
         // open the connection with the database.
         public void connectString()
@@ -981,22 +980,14 @@ namespace QuickSurveys
         protected void RespondentRegistration_Click(object sender, EventArgs e)
         {
             connectString();
-
-            string password = TypedPassword;
-
-            //tbxPassword.Attributes.Add("value", tbxPassword.Text);
-
-            string encodedPassword = password;
-
-            //string encodedPassword = currentUser.EncodePasswordToBase64(password);
-
+            
             currentUser.username = tbxEmail.Text.ToString();
             currentUser.user_fname = tbxFirstName.Text.ToString();
             currentUser.user_lname = tbxLastName.Text.ToString();
             currentUser.user_dob = DateTime.Parse(tbxDateOfBirth.Text.ToString());
             currentUser.user_role = "respondent";
             currentUser.user_pref_phone = tbxPhone.Text.ToString();
-            currentUser.user_password = encodedPassword;
+            currentUser.user_password = currentUser.EncodePasswordToBase64(tbxPasswordRegistration.Text);
             currentRespondent.resp_ip = GetIPAddress();
             currentRespondent.resp_survey_id = Int32.Parse(AppSession.SurveyId.ToString());
             currentRespondent.resp_gender = Int32.Parse(ddRespGender.SelectedValue.ToString());
