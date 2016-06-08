@@ -14,6 +14,9 @@
 
             <asp:View ID="SurveyBlockView" runat="server" EnableViewState="true" ViewStateMode="Enabled">
             <%-- START SURVEYS BLOCK --%>
+            <asp:Button ID="btnStaffSession" runat="server" CssClass="btn btn-warning pull-right "  
+                        Text="Staff Session" onclick="btnStaffSession_Click"  />
+            
             <h1> Choose Your Survey </h1>
             <asp:Repeater ID="RepeaterSurvey" runat="server" >
                 <ItemTemplate>
@@ -26,6 +29,8 @@
                         <br / > <br />
                 </ItemTemplate>
             </asp:Repeater>
+
+
             <%-- END SURVEYS BLOCK --%>
             </asp:View>
 
@@ -201,6 +206,36 @@
             <%-- END THANK YOU BLOCK --%>
             </asp:View>
             
+            <asp:View ID="StaffLoginView" runat="server" EnableViewState="true" ViewStateMode="Enabled">
+            <%-- START Staff Login Session--%>
+            <span style="font-size:36px">Staff Login</span>
+            <asp:Button ID="btnBackToSurveys" runat="server" CssClass="btn btn-warning pull-right "  
+                        Text="<< Back to Surveys" onclick="btnBackToSurvey_click" />
+            <div class="row">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <span style="font-size:22px; margin-left:5px;">Login</span><br />
+                        <div class="col-xs-3 form-group">
+                            <asp:Label ID="Label1" runat="server" Text="Username" Font-Bold="True"></asp:Label>
+                            <asp:TextBox ID="tbxStaffUsername" runat="server" TextMode="SingleLine" ToolTip="Username" CssClass="form-control"></asp:TextBox>
+                        </div>
+                        <div class="col-xs-3 form-group">
+                            <asp:Label ID="Label2" runat="server" Text="Password" Font-Bold="True"></asp:Label>
+                            <asp:TextBox ID="tbxStaffPassword" runat="server" TextMode="Password" ToolTip="Password" CssClass="form-control"></asp:TextBox>
+                        </div>
+                        <div class="col-xs-3 form-group">
+                            <br />
+                            <asp:Button ID="btnStaffLogin" runat="server" Text="Login" 
+                                CssClass="btn btn-success " Width="134px" Enabled="True" 
+                                onclick="btnStaffLogin_Click" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <%-- END STAFF LOGIN BLOCK --%>
+            </asp:View>
+
+
         </asp:MultiView>
    
     </div>

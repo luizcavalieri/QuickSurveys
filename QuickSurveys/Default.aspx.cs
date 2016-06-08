@@ -26,6 +26,8 @@ namespace QuickSurveys
         //int answerIndexArray;
         AppSession appSession = new AppSession();
         User currentUser = new User();
+        User staffCurrentUser = new User();
+        
         
         // open the connection with the database.
         public void connectString()
@@ -54,51 +56,46 @@ namespace QuickSurveys
         {
             if (!IsPostBack)
             {
-                //detect if password was changed. if filled and not equal to mask, it is new
-                if (tbxPassword.Text.Trim().Length > 0 && tbxPassword.Text != passwordMask)
+
+                if (AppSession.StaffSession != null && AppSession.StaffSession == true)
                 {
-                    TypedPassword = tbxPassword.Text;
-                    tbxPassword.Attributes.Add("value", passwordMask);
+                    MultiViewMainPage.ActiveViewIndex = 4;
                 }
-                tbxPassword.Attributes.Add("onclick", "Clear_Password('" + tbxPassword.ClientID + "')");
-
-                if (!ClientScript.IsClientScriptBlockRegistered("Clear_Password"))
+                else
                 {
-                    ClientScript.RegisterClientScriptBlock(typeof(string), "Clear_Password", "function Clear_Password(id){ try{document.getElementById(id).value = '';} catch(ex){/* do nothing */} }", true);
-                }
-                
-                if (AppSession.SurveyId != null)
-                {
-                    if (AppSession.EndOfSurvey == null)
+                    if (AppSession.SurveyId != null)
                     {
-                        AppSession.EndOfSurvey = false;
-                    }
+                        if (AppSession.EndOfSurvey == null)
+                        {
+                            AppSession.EndOfSurvey = false;
+                        }
 
 
-                    if (AppSession.EndOfSurvey == true)
-                    {
-                        FillDropDownState();
-                        FillDropDownGender();
-                        MultiViewMainPage.ActiveViewIndex = 2;
+                        if (AppSession.EndOfSurvey == true)
+                        {
+                            FillDropDownState();
+                            FillDropDownGender();
+                            MultiViewMainPage.ActiveViewIndex = 2;
+                        }
+                        else
+                        {
+                            MultiViewMainPage.ActiveViewIndex = 1;
+                            int survSequence = Int32.Parse(Session["quest_survey_sequence"].ToString());
+                            int? survId = AppSession.SurveyId;
+                            GetQuestion(survId, survSequence);
+                        }
+
                     }
                     else
                     {
-                        MultiViewMainPage.ActiveViewIndex = 1;
-                        int survSequence = Int32.Parse(Session["quest_survey_sequence"].ToString());
-                        int? survId = AppSession.SurveyId;
-                        GetQuestion(survId, survSequence);
+                        MultiViewMainPage.ActiveViewIndex = 0;
+                        Session["answer_group_option_child"] = false;
+                        Session["current_question"] = 0;
+                        GetSurveyButtons();
                     }
-                    
-                    
-                }
-                else 
-                {
-                    MultiViewMainPage.ActiveViewIndex = 0;
-                    Session["answer_group_option_child"] = false;
-                    Session["current_question"] = 0;
-                    GetSurveyButtons();
-                }
 
+                }
+ 
             }
 
         }
@@ -890,8 +887,7 @@ namespace QuickSurveys
 
             return indexAnswerArray;
         }*/
-
-
+        
         // check if the answer has a child question
         private bool GetLogicalAnswer(int? answerGroupOptionChild)
         {
@@ -1105,6 +1101,46 @@ namespace QuickSurveys
 
 
             Response.Redirect("~/Default.aspx");
+        }
+
+        protected void btnStaffSession_Click(object sender, EventArgs e)
+        {
+            AppSession.StaffSession = true;
+            
+            Response.Redirect("~/Default.aspx");
+        }
+
+        protected void btnBackToSurvey_click(object sender, EventArgs e)
+        {
+            AppSession.StaffSession = false;
+
+            Response.Redirect("~/Default.aspx");
+        }
+
+        protected void btnStaffLogin_Click(object sender, EventArgs e)
+        {
+            staffCurrentUser.username = tbxStaffUsername.Text;
+            staffCurrentUser.user_password = tbxStaffPassword.Text;
+
+            if (staffCurrentUser.StaffLoginCheckUser())
+            {
+
+                if (staffCurrentUser.StaffLogin())
+                {
+                    Response.Write("<script language=javascript>alert('Welcome!!');</script>");
+                }
+                else
+                {
+                    Response.Write("<script language=javascript>alert('Please verify if the username and password, are correct!');</script>");
+                }
+                
+            }
+            else
+            {
+                Response.Write("<script language=javascript>alert('Please verify if the username and password, are correct!');</script>");
+            }
+
+
         }
 
          

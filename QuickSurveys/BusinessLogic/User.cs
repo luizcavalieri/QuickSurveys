@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Security;
+using System.Data.SqlClient;
+using System.Configuration;
 
 namespace QuickSurveys
 {
-    public class User
+     public class User
     {
         int _user_id;
         string _username;
@@ -16,6 +18,7 @@ namespace QuickSurveys
         string _user_role;
         string _user_pref_phone;
         DateTime _user_dob;
+        SqlConnection myConnection;
 
         public int user_id
         {
@@ -62,6 +65,26 @@ namespace QuickSurveys
             set { _user_dob = value; }
         }
 
+        public void connectString()
+        {
+            String myConnectionString = ConfigurationManager.ConnectionStrings["MyConnection"].ConnectionString;
+
+            if (myConnectionString.Equals("prod"))
+            {
+                myConnectionString = AppConstant.ProdConnectionString;
+            }
+            else if (myConnectionString.Equals("test"))
+            {
+                myConnectionString = AppConstant.TestConnectionString;
+            }
+            else
+            {
+                myConnectionString = AppConstant.DevConnectionString;
+            }
+
+            myConnection = new SqlConnection();
+            myConnection.ConnectionString = myConnectionString;
+        }
 
         public string EncodePasswordToBase64(string password)
         {
@@ -88,6 +111,77 @@ namespace QuickSurveys
             utf8Decode.GetChars(todecode_byte, 0, todecode_byte.Length, decoded_char, 0);
             string result = new String(decoded_char);
             return result;
+        }
+
+        // check how many records there are in the database with 
+        //the username inserted by the user
+        //will return true just when there is only one user with that username
+        public bool StaffLoginCheckUser()
+        {
+            connectString();
+
+            SqlCommand myCommand;
+
+            string getUserQuery = @"Select COUNT(*) from users
+                                        where username = @username";
+
+            myCommand = new SqlCommand(getUserQuery, myConnection);
+
+            myConnection.Open();
+            myCommand.Parameters.AddWithValue("@username", this.username);
+
+            int numberOfRows = (int)myCommand.ExecuteScalar();
+
+            if (myConnection.State == System.Data.ConnectionState.Open)
+                myConnection.Close();
+
+            if (numberOfRows != 1)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+
+        }
+
+        public bool StaffLogin()
+        {
+            connectString();
+            SqlDataReader myReader;
+            SqlCommand myCommand;
+            string passwordEntered;
+
+            string getUserQuery = @"Select username, user_password from users
+                                        where username = @username";
+
+            myCommand = new SqlCommand(getUserQuery, myConnection);
+
+            myConnection.Open();
+            myCommand.Parameters.AddWithValue("@username", this.username);
+           
+            myReader = myCommand.ExecuteReader();
+
+            while (myReader.Read())
+            {
+                passwordEntered = myReader["user_password"].ToString();
+
+                if (myConnection.State == System.Data.ConnectionState.Open)
+                    myConnection.Close();
+
+                if (this.user_password == passwordEntered)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+
+            }
+
+            return false;
         }
 
     }

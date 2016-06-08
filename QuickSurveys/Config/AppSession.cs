@@ -92,5 +92,14 @@ namespace QuickSurveys
 
         }
 
+        public static bool? StaffSession
+        {
+            set { HttpContext.Current.Session["staffSession"] = value; }
+            get
+            {
+                return HttpContext.Current.Session["staffSession"] as bool?;
+            }
+        }
+
     }
 }

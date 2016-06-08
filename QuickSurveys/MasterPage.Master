@@ -20,14 +20,14 @@
 <body style="margin-bottom: 243px">
     <form id="form1" runat="server">
     <div>
-        <asp:Panel ID="Panel1" runat="server" BackColor="#0066CC" Height="81px">
+        <asp:Panel ID="Panel1" runat="server" BackColor="#0066CC" Height="81px" CssClass=" top">
                <p> 
                     &nbsp;
                     <br / >
-                    <asp:Label ID="Label1" runat="server" Text="QuickSurveys" CssClass="text-left h1" 
-                        ForeColor="White"></asp:Label>
+                    <asp:Label ID="Label1" runat="server" Text="QuickSurveys" CssClass="text-left" 
+                        ForeColor="White" Font-Bold="False" Font-Size="40px"></asp:Label>
                     <br /> <br />
-                    <asp:Menu ID="Menu1"  runat="server" Orientation="Horizontal" CssClass="icon" ForeColor="White" Height="23px" RenderingMode="Table" Width="626px" padding>
+                    <asp:Menu ID="Menu1"  runat="server" Orientation="Horizontal" CssClass="icon" ForeColor="White" Height="23px" RenderingMode="Table" Width="626px">
                     </asp:Menu>
                 </p>
             </asp:Panel>
