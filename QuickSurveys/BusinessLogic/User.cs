@@ -153,7 +153,7 @@ namespace QuickSurveys
             SqlCommand myCommand;
             string passwordEntered;
 
-            string getUserQuery = @"Select username, user_password from users
+            string getUserQuery = @"Select username, user_password, user_role from users
                                         where username = @username";
 
             myCommand = new SqlCommand(getUserQuery, myConnection);
@@ -172,16 +172,23 @@ namespace QuickSurveys
 
                 if (this.user_password == passwordEntered)
                 {
+                    AppSession.StaffLogged = true;
                     return true;
                 }
                 else
                 {
+                    AppSession.StaffLogged = false;
                     return false;
                 }
 
             }
 
             return false;
+        }
+        public void StaffLogout()
+        {
+            AppSession.StaffLogged = false;
+            AppSession.StaffSession = false;
         }
 
     }

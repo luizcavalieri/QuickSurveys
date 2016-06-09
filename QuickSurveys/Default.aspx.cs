@@ -57,9 +57,15 @@ namespace QuickSurveys
             if (!IsPostBack)
             {
 
-                if (AppSession.StaffSession != null && AppSession.StaffSession == true)
+                if (AppSession.StaffSession != null && AppSession.StaffSession == true && AppSession.StaffLogged != null && AppSession.StaffLogged == true)
+                {
+                    MultiViewMainPage.ActiveViewIndex = 5;
+                    Response.Write("<script language=javascript>alert('Welcome!!');</script>");
+                }
+                else if ((AppSession.StaffSession != null && AppSession.StaffSession == true) && (AppSession.StaffLogged == null || AppSession.StaffLogged == false))
                 {
                     MultiViewMainPage.ActiveViewIndex = 4;
+
                 }
                 else
                 {
@@ -1127,7 +1133,7 @@ namespace QuickSurveys
 
                 if (staffCurrentUser.StaffLogin())
                 {
-                    Response.Write("<script language=javascript>alert('Welcome!!');</script>");
+                    Response.Redirect("~/Default.aspx");
                 }
                 else
                 {
@@ -1141,6 +1147,13 @@ namespace QuickSurveys
             }
 
 
+        }
+
+        protected void btnStaffLogout_Click(object sender, EventArgs e)
+        {
+            staffCurrentUser.StaffLogout();
+
+            Response.Redirect("~/Default.aspx");
         }
 
          

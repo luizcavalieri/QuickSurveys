@@ -235,6 +235,36 @@
             <%-- END STAFF LOGIN BLOCK --%>
             </asp:View>
 
+            
+            <asp:View ID="StaffAreaView" runat="server" EnableViewState="true" ViewStateMode="Enabled">
+            <%-- START Staff Area BLOCK--%>
+            <span style="font-size:36px">Staff Area</span>
+            <asp:Button ID="btnStaffLogOut" runat="server" CssClass="btn btn-warning pull-right "  
+                        Text="<< Back to Surveys" onclick="btnStaffLogout_Click"/>
+            <div class="row">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <span style="font-size:22px; margin-left:5px;">Login</span><br />
+                        <div class="col-xs-3 form-group">
+                            <asp:Label ID="Label3" runat="server" Text="Username" Font-Bold="True"></asp:Label>
+                            <asp:TextBox ID="TextBox1" runat="server" TextMode="SingleLine" ToolTip="Username" CssClass="form-control"></asp:TextBox>
+                        </div>
+                        <div class="col-xs-3 form-group">
+                            <asp:Label ID="Label4" runat="server" Text="Password" Font-Bold="True"></asp:Label>
+                            <asp:TextBox ID="TextBox2" runat="server" TextMode="Password" ToolTip="Password" CssClass="form-control"></asp:TextBox>
+                        </div>
+                        <div class="col-xs-3 form-group">
+                            <br />
+                            <asp:Button ID="btnStaffLogout" runat="server" Text="Login" 
+                                CssClass="btn btn-success " Width="134px" Enabled="True" 
+                                 />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <%-- END STAFF AREA BLOCK --%>
+            </asp:View>
+
 
         </asp:MultiView>
    
