@@ -240,28 +240,84 @@
             <%-- START Staff Area BLOCK--%>
             <span style="font-size:36px">Staff Area</span>
             <asp:Button ID="btnStaffLogOut" runat="server" CssClass="btn btn-warning pull-right "  
-                        Text="<< Back to Surveys" onclick="btnStaffLogout_Click"/>
+                        Text="Logout" onclick="btnStaffLogout_Click"/>
             <div class="row">
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        <span style="font-size:22px; margin-left:5px;">Login</span><br />
-                        <div class="col-xs-3 form-group">
-                            <asp:Label ID="Label3" runat="server" Text="Username" Font-Bold="True"></asp:Label>
-                            <asp:TextBox ID="TextBox1" runat="server" TextMode="SingleLine" ToolTip="Username" CssClass="form-control"></asp:TextBox>
+                        <div class="row">
+                            <span style="font-size:22px; margin-left:5px;">Search</span><br />
+                            <div class="col-xs-6 form-group">
+                                <asp:Label ID="lblSearchKeyword" runat="server" Text="Search Answers Keyword" Font-Bold="True"></asp:Label>
+                                <asp:TextBox ID="tbxSearchKeyword" runat="server" TextMode="SingleLine" ToolTip="Search Keyword" CssClass="form-control"></asp:TextBox>
+                            </div>
+                            <div class="col-xs-3 form-group">
+                                <asp:Label ID="Label4" runat="server" Text="Email Search" Font-Bold="True"></asp:Label>
+                                <asp:TextBox ID="tbxSearchEmail" runat="server" TextMode="SingleLine" ToolTip="Email for search" CssClass="form-control"></asp:TextBox>
+                            </div>
+                            
+                        </div>   
+                        <div class="row">
+                            <div class="col-xs-3 form-group">
+                                <asp:Label ID="lblSearchFirstName" runat="server" Text="First Name" Font-Bold="True"></asp:Label>
+                                <asp:TextBox ID="tbxSearchFirstName" runat="server" TextMode="SingleLine" ToolTip="First Name" CssClass="form-control"></asp:TextBox>
+                            </div>
+                            <div class="col-xs-3 form-group">
+                                <asp:Label ID="lblSearchLastName" runat="server" Text="Last Name" Font-Bold="True"></asp:Label>
+                                <asp:TextBox ID="tbxSearchLastName" runat="server" TextMode="SingleLine" ToolTip="Last Name" CssClass="form-control"></asp:TextBox>
+                            </div>
+                            <div class="col-xs-3 form-group">
+                                <asp:Label ID="lblSearchGender" runat="server" Text="Gender" Font-Bold="True" ></asp:Label>
+                                <asp:DropDownList ID="ddSearchGender" runat="server" CssClass="form-control">
+                                </asp:DropDownList>
+                            </div>
+                            <div class="col-xs-3 form-group">
+                                <asp:Label ID="lblSearchStateTerritory" runat="server" Text="State Territory" Font-Bold="True"></asp:Label>
+                                <asp:DropDownList ID="ddSearchStateTerritory" runat="server"  CssClass="form-control">
+                                </asp:DropDownList>
+                            </div>
                         </div>
-                        <div class="col-xs-3 form-group">
-                            <asp:Label ID="Label4" runat="server" Text="Password" Font-Bold="True"></asp:Label>
-                            <asp:TextBox ID="TextBox2" runat="server" TextMode="Password" ToolTip="Password" CssClass="form-control"></asp:TextBox>
+                        <div class="row">
+                            <div class="col-xs-3 form-group">
+                                <asp:Label ID="lblSearchHomeSuburb" runat="server" Text="Home Suburb" Font-Bold="True"></asp:Label>
+                                <asp:TextBox ID="tbxSearchHomeSuburb" runat="server" TextMode="SingleLine" ToolTip="Search Keyword" CssClass="form-control"></asp:TextBox>
+                            </div>
+                            <div class="col-xs-3 form-group">
+                                <asp:Label ID="lblSearchHomePostCode" runat="server" Text="Home Post Code" Font-Bold="True"></asp:Label>
+                                <asp:TextBox ID="tbxSearchHomePostCode" runat="server" TextMode="Number" ToolTip="Password" CssClass="form-control"></asp:TextBox>
+                            </div>
+                            <div class="col-xs-3 form-group">
+                                <asp:Label ID="lblSearchWorkSuburb" runat="server" Text="Work Suburb" Font-Bold="True"></asp:Label>
+                                <asp:TextBox ID="tbxSearchWorkSuburb" runat="server" TextMode="SingleLine" ToolTip="Password" CssClass="form-control"></asp:TextBox>
+                            </div>
+                            <div class="col-xs-3 form-group">
+                                <asp:Label ID="lblSearchWorkPostCode" runat="server" Text="Work Post Code" Font-Bold="True"></asp:Label>
+                                <asp:TextBox ID="tbxSearchWorkPostCode" runat="server" TextMode="Number" ToolTip="Password" CssClass="form-control"></asp:TextBox>
+                            </div>
+                            
                         </div>
-                        <div class="col-xs-3 form-group">
-                            <br />
-                            <asp:Button ID="btnStaffLogout" runat="server" Text="Login" 
-                                CssClass="btn btn-success " Width="134px" Enabled="True" 
-                                 />
+                        <div class="row">
+                            <div class="col-xs-3 form-group">
+                                <br />
+                                <asp:Button ID="btnSearchRespondent" runat="server" Text="Search" 
+                                    CssClass="btn btn-success " Width="134px" Enabled="True" onclick="btnSearch_Click" 
+                                     />
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="panel panel-default">
+                    <asp:GridView ID="gdvSearchResults" runat="server" CssClass="table table-responsive table-hover table-striped">
+                        
+
+                    </asp:GridView>
+
+
+                </div>
+            </div>
+
+
             <%-- END STAFF AREA BLOCK --%>
             </asp:View>
 

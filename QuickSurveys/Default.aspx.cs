@@ -14,7 +14,7 @@ namespace QuickSurveys
 {
     public partial class Default : Config.BasePage
     {
-        // creating object from class question
+        //creating object from class question
         Question currentQuestion = new Question();
         Survey currentSurvey = new Survey();
         Survey listSurvey = new Survey();
@@ -23,7 +23,6 @@ namespace QuickSurveys
         SqlCommand myCommand;
         Answer currentAnswer = new Answer();
         List<Answer[]> answerList = new List<Answer[]>();
-        //int answerIndexArray;
         AppSession appSession = new AppSession();
         User currentUser = new User();
         User staffCurrentUser = new User();
@@ -61,6 +60,7 @@ namespace QuickSurveys
                 {
                     MultiViewMainPage.ActiveViewIndex = 5;
                     Response.Write("<script language=javascript>alert('Welcome!!');</script>");
+                   
                 }
                 else if ((AppSession.StaffSession != null && AppSession.StaffSession == true) && (AppSession.StaffLogged == null || AppSession.StaffLogged == false))
                 {
@@ -389,15 +389,9 @@ namespace QuickSurveys
 
                int success = myCommand.ExecuteNonQuery();
 
-               //if (success != 1)
-               //{
-               //    ("It didn't insert shit:" + query);
-               //}
-
                if (myConnection.State == System.Data.ConnectionState.Open)
                     myConnection.Close();
 
-               //int? checkIfInsert = modified;
 
             }
         }
@@ -762,9 +756,12 @@ namespace QuickSurveys
 
                 foreach (ListItem myList in cbxAnswerGroupOpt.Items)
                 {
+                    
                     if (myList.Selected)
                     {
+                        insertAnswer = new Answer();
                         insertAnswer.answer_group_option_id = Int32.Parse(myList.Value.ToString());
+                        insertAnswer.answer_text = myList.Text.ToString();
                         insertAnswer.answer_question_id = Int32.Parse(Session["current_question"].ToString());
                         //insertAnswer.answer_resp_id = Int32.Parse(AppSession.RespondentId.ToString());
                         AppSession.IndexAnswer++;
@@ -781,6 +778,7 @@ namespace QuickSurveys
                             answerGroupOptionChild = true;
                         }
                     }
+                    
                 }
             }
             
@@ -789,6 +787,7 @@ namespace QuickSurveys
             {
                 insertAnswer = new Answer();
                 insertAnswer.answer_group_option_id = string.IsNullOrEmpty(rdbAnswerGroupOpt.SelectedValue.ToString()) ? 0 : int.Parse(rdbAnswerGroupOpt.SelectedValue.ToString());
+                insertAnswer.answer_text = rdbAnswerGroupOpt.SelectedItem.ToString();
                 insertAnswer.answer_question_id = Int32.Parse(Session["current_question"].ToString());
                 //insertAnswer.answer_resp_id = Int32.Parse(AppSession.RespondentId.ToString());
 
@@ -844,6 +843,7 @@ namespace QuickSurveys
                 insertAnswer = new Answer();
                 insertAnswer.answer_numeric = string.IsNullOrEmpty(numberBox.Text.ToString()) ? 0 : Int32.Parse(numberBox.Text.ToString());
                 insertAnswer.answer_question_id = Int32.Parse(Session["current_question"].ToString());
+                insertAnswer.answer_text = "Number: "+numberBox.Text.ToString();
                // insertAnswer.answer_resp_id = Int32.Parse(AppSession.RespondentId.ToString());
                // InsertNumericAnswer(insertAnswer.answer_numeric, insertAnswer.answer_question_id, insertAnswer.answer_resp_id);
 
@@ -855,6 +855,7 @@ namespace QuickSurveys
             else if (inputType == 18)
             {
                 insertAnswer.answer_group_option_id = string.IsNullOrEmpty(ddAnswerGroupOpt.SelectedValue.ToString()) ? 0 : Int32.Parse(ddAnswerGroupOpt.SelectedValue.ToString());
+                insertAnswer.answer_text = ddAnswerGroupOpt.SelectedItem.ToString();
                 insertAnswer.answer_question_id = Int32.Parse(Session["current_question"].ToString());
                 int? answerGroupOptionId = int.Parse(insertAnswer.answer_group_option_id.ToString());
               
@@ -1156,6 +1157,89 @@ namespace QuickSurveys
             Response.Redirect("~/Default.aspx");
         }
 
+        protected void btnSearch_Click(object sender, EventArgs e)
+        {
+            searchUser();
+
+        }
+
+        protected void searchUser()
+        {
+            connectString();
+
+            string searchKeyword;
+
+            if (tbxSearchKeyword.Text == "")
+            {
+                searchKeyword = "-";
+            }
+            else
+            {
+                searchKeyword = tbxSearchKeyword.Text;
+            }
+
+            string searchQuery = @" select distinct us.user_id, us.username , us.user_fname, us.user_lname, rs.resp_email
+                                    from users us
+                                    Inner Join respondents rs
+                                    on us.user_id = rs.resp_user_id
+                                    INNER JOIN answers an
+                                    ON an.answer_resp_id = rs.resp_id
+                                    where rs.resp_email = @search_email or
+                                          an.answer_text LIKE @search or           
+                                          us.user_fname = @first_name or
+                                          us.user_lname = @last_name or
+                                          rs.resp_email = @search_email or
+                                          rs.resp_state_territory = @state_territory or
+                                          rs.resp_home_suburb = @home_suburb or
+                                          rs.res_home_post_code like @home_post_code or
+                                          rs.resp_work_suburb = @work_suburb or
+                                          rs.resp_work_post_code = @work_post_code
+                                    ;";
+
+            myCommand = new SqlCommand(searchQuery, myConnection);
+
+            myCommand.Parameters.AddWithValue("@search", GetDataValue("%" + searchKeyword + "%"));
+            myCommand.Parameters.AddWithValue("@search_email", GetDataValue(tbxSearchEmail.Text));
+            myCommand.Parameters.AddWithValue("@first_name", GetDataValue(tbxSearchFirstName.Text));
+            myCommand.Parameters.AddWithValue("@last_name", GetDataValue(tbxSearchLastName.Text));
+            myCommand.Parameters.AddWithValue("@state_territory", GetDataValue(ddSearchStateTerritory.Text));
+            myCommand.Parameters.AddWithValue("@gender", GetDataValue(ddSearchGender.Text));
+            myCommand.Parameters.AddWithValue("@home_suburb", GetDataValue(tbxSearchHomeSuburb.Text));
+            myCommand.Parameters.AddWithValue("@work_suburb", GetDataValue(tbxSearchWorkSuburb.Text));
+            myCommand.Parameters.AddWithValue("@work_post_code", GetDataValue(tbxSearchWorkPostCode.Text));
+            myCommand.Parameters.AddWithValue("@home_post_code", GetDataValue(tbxSearchHomePostCode.Text));
+
+
+            myConnection.Open();
+            SqlDataReader myReader = myCommand.ExecuteReader();
+
+            DataTable dt = new DataTable();
+            dt.Columns.Add("User Id", System.Type.GetType("System.String"));
+            dt.Columns.Add("UserName", System.Type.GetType("System.String"));
+            dt.Columns.Add("First Name", System.Type.GetType("System.String"));
+            dt.Columns.Add("Last Name", System.Type.GetType("System.String"));
+            dt.Columns.Add("Email", System.Type.GetType("System.String"));
+
+            DataRow myRow;
+
+            while (myReader.Read())
+            {
+                myRow = dt.NewRow();
+                myRow["User Id"] = myReader["user_id"].ToString();
+                myRow["UserName"] = myReader["username"].ToString();
+                myRow["First Name"] = myReader["user_fname"].ToString();
+                myRow["Last Name"] = myReader["user_lname"].ToString();
+                myRow["Email"] = myReader["resp_email"].ToString();
+
+                dt.Rows.Add(myRow);
+            }
+
+            gdvSearchResults.DataSource = dt;
+            gdvSearchResults.DataBind();
+
+            myConnection.Close();
+        }
+        
          
     }
 }

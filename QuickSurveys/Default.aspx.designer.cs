@@ -553,22 +553,22 @@ namespace QuickSurveys {
         protected global::System.Web.UI.WebControls.Button btnStaffLogOut;
         
         /// <summary>
-        /// Label3 control.
+        /// lblSearchKeyword control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label3;
+        protected global::System.Web.UI.WebControls.Label lblSearchKeyword;
         
         /// <summary>
-        /// TextBox1 control.
+        /// tbxSearchKeyword control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextBox1;
+        protected global::System.Web.UI.WebControls.TextBox tbxSearchKeyword;
         
         /// <summary>
         /// Label4 control.
@@ -580,21 +580,174 @@ namespace QuickSurveys {
         protected global::System.Web.UI.WebControls.Label Label4;
         
         /// <summary>
-        /// TextBox2 control.
+        /// tbxSearchEmail control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextBox2;
+        protected global::System.Web.UI.WebControls.TextBox tbxSearchEmail;
         
         /// <summary>
-        /// btnStaffLogout control.
+        /// lblSearchFirstName control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnStaffLogout;
+        protected global::System.Web.UI.WebControls.Label lblSearchFirstName;
+        
+        /// <summary>
+        /// tbxSearchFirstName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox tbxSearchFirstName;
+        
+        /// <summary>
+        /// lblSearchLastName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblSearchLastName;
+        
+        /// <summary>
+        /// tbxSearchLastName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox tbxSearchLastName;
+        
+        /// <summary>
+        /// lblSearchGender control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblSearchGender;
+        
+        /// <summary>
+        /// ddSearchGender control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddSearchGender;
+        
+        /// <summary>
+        /// lblSearchStateTerritory control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblSearchStateTerritory;
+        
+        /// <summary>
+        /// ddSearchStateTerritory control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddSearchStateTerritory;
+        
+        /// <summary>
+        /// lblSearchHomeSuburb control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblSearchHomeSuburb;
+        
+        /// <summary>
+        /// tbxSearchHomeSuburb control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox tbxSearchHomeSuburb;
+        
+        /// <summary>
+        /// lblSearchHomePostCode control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblSearchHomePostCode;
+        
+        /// <summary>
+        /// tbxSearchHomePostCode control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox tbxSearchHomePostCode;
+        
+        /// <summary>
+        /// lblSearchWorkSuburb control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblSearchWorkSuburb;
+        
+        /// <summary>
+        /// tbxSearchWorkSuburb control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox tbxSearchWorkSuburb;
+        
+        /// <summary>
+        /// lblSearchWorkPostCode control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblSearchWorkPostCode;
+        
+        /// <summary>
+        /// tbxSearchWorkPostCode control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox tbxSearchWorkPostCode;
+        
+        /// <summary>
+        /// btnSearchRespondent control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnSearchRespondent;
+        
+        /// <summary>
+        /// gdvSearchResults control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView gdvSearchResults;
     }
 }

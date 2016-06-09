@@ -27,18 +27,18 @@ namespace QuickSurveys
         {
             set 
             {
-                //if (HttpContext.Current.Session["answerlist"] == null)
-                //{
+                if (HttpContext.Current.Session["answerlist"] == null)
+                {
                     HttpContext.Current.Session["answerlist"] = value;
-                //}
-                //else
-                //{
-                //    List<Answer> tmp = HttpContext.Current.Session["answerlist"] as List<Answer>;
+                }
+                else
+                {
+                    List<Answer> tmp = HttpContext.Current.Session["answerlist"] as List<Answer>;
 
-                //    tmp.Add(value[0]);
+                    tmp.Add(value[0]);
 
-                //    HttpContext.Current.Session["answerlist"] = tmp;
-                //}
+                    HttpContext.Current.Session["answerlist"] = tmp;
+                }
             }
             get
             {
@@ -107,6 +107,15 @@ namespace QuickSurveys
             get
             {
                 return HttpContext.Current.Session["staffLogged"] as bool?;
+            }
+        }
+
+        public static bool? Search
+        {
+            set { HttpContext.Current.Session["search"] = value; }
+            get
+            {
+                return HttpContext.Current.Session["search"] as bool?;
             }
         }
 
