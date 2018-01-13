@@ -1003,8 +1003,8 @@ namespace QuickSurveys
             currentRespondent.resp_user_id = Int32.Parse(InsertUser(currentUser.username, currentUser.user_fname, currentUser.user_lname, currentUser.user_password, currentUser.user_pref_phone, currentUser.user_dob, currentUser.user_role).ToString());
 
 
-            String insertRespondent = @"insert into respondents ( resp_gender, resp_state_territory, resp_email, resp_home_suburb, res_home_post_code, resp_work_post_code, resp_work_suburb, resp_IP, resp_user_id, resp_survey_id)   
-                                    output inserted.resp_id values (@resp_gender, @resp_state_territory, @resp_email, @resp_home_suburb, @res_home_post_code, @resp_work_post_code, @resp_work_suburb, @resp_IP, @resp_user_id, @resp_survey_id);";
+            String insertRespondent = @"insert into respondents ( resp_gender, resp_state_territory, resp_email, resp_home_suburb, res_home_post_code, resp_work_post_code, resp_work_suburb, resp_IP, resp_user_id, resp_date, resp_survey_id)   
+                                    output inserted.resp_id values (@resp_gender, @resp_state_territory, @resp_email, @resp_home_suburb, @res_home_post_code, @resp_work_post_code, @resp_work_suburb, @resp_IP, @resp_user_id, getdate(), @resp_survey_id);";
 
 
             myCommand = new SqlCommand(insertRespondent, myConnection);
@@ -1051,8 +1051,6 @@ namespace QuickSurveys
                 string ipAddres = GetIPAddress();
                 int surveyId = Int32.Parse(AppSession.SurveyId.ToString());
 
-
-                // changed the inser statement due to the resp_date field being a timestamp field.
                 String insertAnonymousResp = @"insert into respondents ( resp_gender,     
                                                                          resp_state_territory,    
                                                                          resp_email,
@@ -1062,8 +1060,9 @@ namespace QuickSurveys
                                                                          resp_work_suburb,      
                                                                          resp_IP,    
                                                                          resp_user_id,
+                                                                         resp_date,    
                                                                          resp_survey_id)   
-                                                output inserted.resp_id values ('', '', 'anonymous@anonymous.com', '', 0, 0, '', '" + ipAddres + "', 5, " + surveyId  + ");";
+                                                output inserted.resp_id values ('', '', 'anonymous@anonymous.com', '', 0, 0, '', '" + ipAddres + "', 5, getdate(), " + surveyId  + ");";
 
             
                 //get the sql script executing on the connection

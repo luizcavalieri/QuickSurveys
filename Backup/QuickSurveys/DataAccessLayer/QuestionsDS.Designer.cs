@@ -5393,21 +5393,12 @@ WHERE        (questions.quest_id = @quest_id)";
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private int UpdateUpdatedRows(DataSet1 dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allChangedRows, global::System.Collections.Generic.List<global::System.Data.DataRow> allAddedRows) {
             int result = 0;
-            if ((this._surveysTableAdapter != null)) {
-                global::System.Data.DataRow[] updatedRows = dataSet.surveys.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+            if ((this._surveys1TableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.surveys1.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
                 updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
                 if (((updatedRows != null) 
                             && (0 < updatedRows.Length))) {
-                    result = (result + this._surveysTableAdapter.Update(updatedRows));
-                    allChangedRows.AddRange(updatedRows);
-                }
-            }
-            if ((this._input_typeTableAdapter != null)) {
-                global::System.Data.DataRow[] updatedRows = dataSet.input_type.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
-                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
-                if (((updatedRows != null) 
-                            && (0 < updatedRows.Length))) {
-                    result = (result + this._input_typeTableAdapter.Update(updatedRows));
+                    result = (result + this._surveys1TableAdapter.Update(updatedRows));
                     allChangedRows.AddRange(updatedRows);
                 }
             }
@@ -5420,12 +5411,21 @@ WHERE        (questions.quest_id = @quest_id)";
                     allChangedRows.AddRange(updatedRows);
                 }
             }
-            if ((this._surveys1TableAdapter != null)) {
-                global::System.Data.DataRow[] updatedRows = dataSet.surveys1.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+            if ((this._input_typeTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.input_type.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
                 updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
                 if (((updatedRows != null) 
                             && (0 < updatedRows.Length))) {
-                    result = (result + this._surveys1TableAdapter.Update(updatedRows));
+                    result = (result + this._input_typeTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
+            if ((this._surveysTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.surveys.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._surveysTableAdapter.Update(updatedRows));
                     allChangedRows.AddRange(updatedRows);
                 }
             }
@@ -5457,19 +5457,11 @@ WHERE        (questions.quest_id = @quest_id)";
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private int UpdateInsertedRows(DataSet1 dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allAddedRows) {
             int result = 0;
-            if ((this._surveysTableAdapter != null)) {
-                global::System.Data.DataRow[] addedRows = dataSet.surveys.Select(null, null, global::System.Data.DataViewRowState.Added);
+            if ((this._surveys1TableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.surveys1.Select(null, null, global::System.Data.DataViewRowState.Added);
                 if (((addedRows != null) 
                             && (0 < addedRows.Length))) {
-                    result = (result + this._surveysTableAdapter.Update(addedRows));
-                    allAddedRows.AddRange(addedRows);
-                }
-            }
-            if ((this._input_typeTableAdapter != null)) {
-                global::System.Data.DataRow[] addedRows = dataSet.input_type.Select(null, null, global::System.Data.DataViewRowState.Added);
-                if (((addedRows != null) 
-                            && (0 < addedRows.Length))) {
-                    result = (result + this._input_typeTableAdapter.Update(addedRows));
+                    result = (result + this._surveys1TableAdapter.Update(addedRows));
                     allAddedRows.AddRange(addedRows);
                 }
             }
@@ -5481,11 +5473,19 @@ WHERE        (questions.quest_id = @quest_id)";
                     allAddedRows.AddRange(addedRows);
                 }
             }
-            if ((this._surveys1TableAdapter != null)) {
-                global::System.Data.DataRow[] addedRows = dataSet.surveys1.Select(null, null, global::System.Data.DataViewRowState.Added);
+            if ((this._input_typeTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.input_type.Select(null, null, global::System.Data.DataViewRowState.Added);
                 if (((addedRows != null) 
                             && (0 < addedRows.Length))) {
-                    result = (result + this._surveys1TableAdapter.Update(addedRows));
+                    result = (result + this._input_typeTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
+            if ((this._surveysTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.surveys.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._surveysTableAdapter.Update(addedRows));
                     allAddedRows.AddRange(addedRows);
                 }
             }
@@ -5531,19 +5531,11 @@ WHERE        (questions.quest_id = @quest_id)";
                     allChangedRows.AddRange(deletedRows);
                 }
             }
-            if ((this._surveys1TableAdapter != null)) {
-                global::System.Data.DataRow[] deletedRows = dataSet.surveys1.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+            if ((this._surveysTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.surveys.Select(null, null, global::System.Data.DataViewRowState.Deleted);
                 if (((deletedRows != null) 
                             && (0 < deletedRows.Length))) {
-                    result = (result + this._surveys1TableAdapter.Update(deletedRows));
-                    allChangedRows.AddRange(deletedRows);
-                }
-            }
-            if ((this._answer_groupTableAdapter != null)) {
-                global::System.Data.DataRow[] deletedRows = dataSet.answer_group.Select(null, null, global::System.Data.DataViewRowState.Deleted);
-                if (((deletedRows != null) 
-                            && (0 < deletedRows.Length))) {
-                    result = (result + this._answer_groupTableAdapter.Update(deletedRows));
+                    result = (result + this._surveysTableAdapter.Update(deletedRows));
                     allChangedRows.AddRange(deletedRows);
                 }
             }
@@ -5555,11 +5547,19 @@ WHERE        (questions.quest_id = @quest_id)";
                     allChangedRows.AddRange(deletedRows);
                 }
             }
-            if ((this._surveysTableAdapter != null)) {
-                global::System.Data.DataRow[] deletedRows = dataSet.surveys.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+            if ((this._answer_groupTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.answer_group.Select(null, null, global::System.Data.DataViewRowState.Deleted);
                 if (((deletedRows != null) 
                             && (0 < deletedRows.Length))) {
-                    result = (result + this._surveysTableAdapter.Update(deletedRows));
+                    result = (result + this._answer_groupTableAdapter.Update(deletedRows));
+                    allChangedRows.AddRange(deletedRows);
+                }
+            }
+            if ((this._surveys1TableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.surveys1.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+                if (((deletedRows != null) 
+                            && (0 < deletedRows.Length))) {
+                    result = (result + this._surveys1TableAdapter.Update(deletedRows));
                     allChangedRows.AddRange(deletedRows);
                 }
             }
